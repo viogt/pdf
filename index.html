@@ -42,12 +42,12 @@ function getDF(x){
 
 function Rename( ob ) {
   
-  var xID = ob.getAttribue('ref');
+  var xID = ob.getAttribute('ref');
   alert('id = ' + xID);
   
   var J = {};
   J.collection = 'files';
-  J.id = ob.getAttribue('ref');
+  J.id = ob.getAttribute('ref');
   J.file = ob.value.trim();
   J.action = 'rename';
   Send( JSON.stringify(J) );
