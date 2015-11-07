@@ -76,7 +76,7 @@ function operate( js, resp ) {
 		        return;
             case 'rename':
                 js.modified = new Date();
-                cll.update({ _id: new ObjId(js.id) }, {$set: { file: js.file}}, function(err, obj) {
+                cll.update({ _id: new ObjId(unescape(js.id)) }, {$set: { file: js.file}}, function(err, obj) {
                     if(err) return shucher(resp, err, db); db.close();
 			        resp.end(JSON.stringify(obj));
 		        });
