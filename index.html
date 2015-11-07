@@ -6,6 +6,7 @@
   <title>PDF edit and create</title>
 
 <style>
+  TEXTAREA { width:200px; height: 4em; background-color: lightyellow; }
 </style>
 <script type="text/javascript">
 
@@ -16,18 +17,53 @@ function Send(msg) {
     //xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
     //xmlhttp.setRequestHeader("Content-Length", XMLtoSend.length);
     http.send(msg);
-    alert('Form SERVER:' + http.responseText);
-    return http.responseText;
+    
+    var J = JSON.parse(http.responseText);
+    alert('Theme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server);
+    return J;
   } catch(e) { alert(e.message); return 'Error!'; }
+}
+
+function id(x) { return document.getElementById(x); }
+function getAndSend() {
+  var J = {};
+  J.theme = id('theme').value.trim();
+  J.content = id('content').value.trim();
+  Send( JSON.stringify(J) );
 }
 
 </script>
 </head>
 <body>
-  Am ajuns.<br>
-  Acum sa vedem mai departe.
-  <TEXTAREA onChange='Send(this.value)'>
-    Un oarecare text.
-  </TEXTAREA>
+
+<table>
+  <tr>
+    <td>Action:</td>
+    <td>
+      <select onChange='getAndSend()'>
+        <option>If exists</option>
+        <option>Save</option>
+        <option>Delete</option>
+        <option>Rename</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Theme:</td>
+    <td>
+      <TEXTAREA id='theme'>
+      Un oarecare text.
+      </TEXTAREA>
+    </td>
+  </tr>
+  <tr>
+    <td>Content:</td>
+    <td>
+      <TEXTAREA id='content'>
+      Un oarecare text.
+      </TEXTAREA>
+    </td>
+  </tr>
+</table>
 </body>
 </html>

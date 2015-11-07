@@ -33,10 +33,9 @@ http.createServer(function (req, res) {
     req.on('data', function (chunk) { body += chunk; });
   
     req.on('end', function () {
-        res.end('from server ' + body);
-    
-    //var J = JSON.parse(body);
-    //console.log('\nPOSTed: ' + body);
+        var J = JSON.parse(body);
+        J.server = 'OK';
+        res.end( JSON.stringify(J) );
     });
   
 }).listen(port, ipaddress);
