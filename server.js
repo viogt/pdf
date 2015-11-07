@@ -21,8 +21,6 @@ http.createServer(function (req, res) {
     
     if(req.url == '/') returnFile('./index.html', res);
     else if(req.url.substr(0,4)=='/res') returnFile('.' + req.url, res);
-    else if(req.url.substr(0,5)=='/hash') mongoHash(req.url.substr(6),res);
-    else if(req.url == '/list') mongoList(res);
     else res.end('Error: unknown request!');
     return;
   }
@@ -36,80 +34,42 @@ http.createServer(function (req, res) {
         J.action += ' done!';
         J.modified = new Date();
         res.end( JSON.stringify(J) );
+        //operate( J, res );
     });
   
 }).listen(port, ipaddress);
 
-console.log('\n\t<...Working on 8080...>\n');
-
-function mongoInsert(resp){
-	MngCl.connect(MngIp, function(err, db) {
-    if (err) return shucher(resp, err);
-
-		var cll = db.collection('clls');
-		var doc = JSON.parse(body);
-		doc.date = new Date();
-		
-		cll.update({name: doc.name},doc,{upsert: true},function(err, obj) {
-      if (err) return shucher(resp, err);
-			db.close();
-			resp.writeHead(200, {'Content-Type': 'text/plain' });
-			resp.end(JSON.stringify(obj));
-		});
-	});
-}
-
-function mongoList(resp){
-	MngCl.connect(MngIp, function(err, db) {
-    if (err) return shucher(resp, err);
-		var cll = db.collection('clls');
-		var recs = cll.find().sort({date:-1}).toArray(function(err, recs) {
-      if (err) return shucher(resp, err);
-			db.close();
-      resp.writeHead(200);
-      for(var i=0, L=recs.length; i<L; i++)
-        if(recs[i].hasOwnProperty('hash')) { delete recs[i].hash; recs[i].hasHash = true; }
-        else recs[i].hasHash = false;
-			resp.end(JSON.stringify(recs));
-		});
-	});
-}
-
-function mongoHash(ref,resp){
-	MngCl.connect(MngIp, function(err, db) {
-    if (err) return shucher(resp, err);
-		var doc = { _id: new ObjId(unescape(ref)) };
-		var cll = db.collection('clls');
-
-		var recs = cll.findOne(doc,function(err, obj) {
-      if (err) return shucher(resp, err);
-			db.close();
-      resp.writeHead(200);
-			resp.end(JSON.stringify(obj));
-		});
-	});
-}
-
-function mongoRemove(resp){
-	MngCl.connect(MngIp, function(err, db) {
-
-    if (err) return shucher(resp, err);
-		var doc, x = JSON.parse(body);
-		
-		if(x.length<2) doc = { _id: new ObjId(x[0]) }
-		else {
-		  for(var i in x) x[i] = new ObjId(x[i]);
-		  doc = { _id: {"$in":x} };
-		}
-
-		var cll = db.collection('clls');
-		var recs = cll.remove(doc,function(err, obj) {
-      if (err) return shucher(resp, err);
-			db.close();
-			resp.writeHead(200, {'Content-Type': 'text/plain' });
-			resp.end(JSON.stringify(obj));
-		});
-	});
+function operate( js, resp ) {
+    resp.writeHead(200, {'Content-Type': 'text/plain' });
+    MngCl.connect(MngIp, function(err, db) {
+        if(err) return shucher(resp, err, null);
+        var cll = db.collection( js.collection );
+        switch( js.action ) {
+            case 'get one':
+                cll.findOne({file: js.file}, function(err, obj) {
+                    if(err) return shucher(resp, err, db); db.close();
+                    resp.end(JSON.stringify(obj));
+		        });
+		    case 'list':
+                cll.find().sort({modified:-1}).toArray(function(err, recs) {
+                    if(err) return shucher(resp, err, db); db.close();
+			        resp.end(JSON.stringify(recs));
+		        });
+            case 'save':
+                js.modified = new Date();
+                cll.update({file: js.file}, js, {upsert: true}, function(err, obj) {
+                    if(err) return shucher(resp, err, db); db.close();
+			        resp.end(JSON.stringify(obj));
+		        });
+            case 'remove':
+                cll.remove( {file: js.file}, function(err, obj) {
+                    if(err) return shucher(resp, err, db); db.close();
+                    resp.end(JSON.stringify(obj));
+                });
+		default:
+                ;
+        }
+    });
 }
 
 function returnFile(fl, resp){
@@ -120,10 +80,4 @@ function returnFile(fl, resp){
     });
 }
 
-function shucher(res, err) {
-  var r = JSON.stringify(err);
-  console.log(r);
-  res.writeHead(200, {'Content-Type': 'text/plain' });
-  res.end('0');
-  return r;
-}
+function shucher(res, err, DB) { if(DB != null) DB.close(); res.end('0' + JSON.stringify(err)); return false; }

@@ -29,7 +29,7 @@ function id(x) { return document.getElementById(x); }
 function getAndSend( ob ) {
   var J = {};
   J.collection = 'files';
-  J.file = 'The new PDF file';
+  J.file = id('title').value.trim();
   J.theme = id('theme').value.trim();
   J.content = id('content').value.trim();
   J.action = ob.options[ob.selectedIndex].text;
@@ -45,11 +45,21 @@ function getAndSend( ob ) {
     <td>Action:</td>
     <td>
       <select onChange='getAndSend(this)'>
-        <option>If exists</option>
-        <option>Save</option>
-        <option>Delete</option>
-        <option>Rename</option>
+        <option>if exists</option>
+        <option>list</option>
+        <option>save</option>
+        <option>remove</option>
+        <option>rename</option>
+        <option>get one</option>
       </select>
+    </td>
+  </tr>
+  <tr>
+    <td>File:</td>
+    <td>
+      <TEXTAREA id='title'>
+      A new PDF file/title.
+      </TEXTAREA>
     </td>
   </tr>
   <tr>
