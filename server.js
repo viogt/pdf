@@ -1,159 +1,135 @@
-#!/bin/env node
-//  OpenShift sample Node application
-var express = require('express');
-var fs      = require('fs');
+var http  = require('http'),
+    fs    = require('fs'),
+    Mng   = require('mongodb'),
+    MngCl = Mng.MongoClient,
+    ObjId = Mng.ObjectID,
+    MngIp = 'mongodb://127.0.0.1:27017/test',
+    body  = '';
 
+MngIp = 'mongodb://'+process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+	process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+	process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+	process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+	process.env.OPENSHIFT_APP_NAME;
 
-/**
- *  Define the sample application.
- */
-var SampleApp = function() {
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP;
+var port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
-    //  Scope.
-    var self = this;
+http.createServer(function (req, res) {
 
+  console.log(' >> ' + req.method + ' > ' + req.url);
 
-    /*  ================================================================  */
-    /*  Helper functions.                                                 */
-    /*  ================================================================  */
+  if(req.method == 'GET') {
+    
+    if(req.url == '/') returnFile('./index.html', res);
+    else if(req.url.substr(0,4)=='/res') returnFile('.' + req.url, res);
+    else if(req.url.substr(0,5)=='/hash') mongoHash(req.url.substr(6),res);
+    else if(req.url == '/list') mongoList(res);
+    else res.end('Error: unknown request!');
+    return;
+  }
+  
+  if(req.url == '/insupd' || req.url == '/remove') {
+    
+    body = '';
+    req.on('data', function (chunk) { body += chunk; });
+  
+    req.on('end', function () {
+      var J = JSON.parse(body);
+      console.log('\nPOSTed: ' + body);
 
-    /**
-     *  Set up server IP address and port # using env variables/defaults.
-     */
-    self.setupVariables = function() {
-        //  Set the environment variables we need.
-        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
-        self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+      if(req.url == '/insupd') mongoInsert(res);
+      else mongoRemove(res);
+    });
+  }
+  else res.end('Error: unknown request!');
 
-        if (typeof self.ipaddress === "undefined") {
-            //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
-            //  allows us to run/test the app locally.
-            console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
-            self.ipaddress = "127.0.0.1";
-        };
-    };
+}).listen(port, ipaddress);
 
+console.log('\n\t<...Working on 8080...>\n');
 
-    /**
-     *  Populate the cache.
-     */
-    self.populateCache = function() {
-        if (typeof self.zcache === "undefined") {
-            self.zcache = { 'index.html': '' };
-        }
+function mongoInsert(resp){
+	MngCl.connect(MngIp, function(err, db) {
+    if (err) return shucher(resp, err);
 
-        //  Local cache for static content.
-        self.zcache['index.html'] = fs.readFileSync('./index.html');
-    };
+		var cll = db.collection('clls');
+		var doc = JSON.parse(body);
+		doc.date = new Date();
+		
+		cll.update({name: doc.name},doc,{upsert: true},function(err, obj) {
+      if (err) return shucher(resp, err);
+			db.close();
+			resp.writeHead(200, {'Content-Type': 'text/plain' });
+			resp.end(JSON.stringify(obj));
+		});
+	});
+}
 
+function mongoList(resp){
+	MngCl.connect(MngIp, function(err, db) {
+    if (err) return shucher(resp, err);
+		var cll = db.collection('clls');
+		var recs = cll.find().sort({date:-1}).toArray(function(err, recs) {
+      if (err) return shucher(resp, err);
+			db.close();
+      resp.writeHead(200);
+      for(var i=0, L=recs.length; i<L; i++)
+        if(recs[i].hasOwnProperty('hash')) { delete recs[i].hash; recs[i].hasHash = true; }
+        else recs[i].hasHash = false;
+			resp.end(JSON.stringify(recs));
+		});
+	});
+}
 
-    /**
-     *  Retrieve entry (content) from cache.
-     *  @param {string} key  Key identifying content to retrieve from cache.
-     */
-    self.cache_get = function(key) { return self.zcache[key]; };
+function mongoHash(ref,resp){
+	MngCl.connect(MngIp, function(err, db) {
+    if (err) return shucher(resp, err);
+		var doc = { _id: new ObjId(unescape(ref)) };
+		var cll = db.collection('clls');
 
+		var recs = cll.findOne(doc,function(err, obj) {
+      if (err) return shucher(resp, err);
+			db.close();
+      resp.writeHead(200);
+			resp.end(JSON.stringify(obj));
+		});
+	});
+}
 
-    /**
-     *  terminator === the termination handler
-     *  Terminate server on receipt of the specified signal.
-     *  @param {string} sig  Signal to terminate on.
-     */
-    self.terminator = function(sig){
-        if (typeof sig === "string") {
-           console.log('%s: Received %s - terminating sample app ...',
-                       Date(Date.now()), sig);
-           process.exit(1);
-        }
-        console.log('%s: Node server stopped.', Date(Date.now()) );
-    };
+function mongoRemove(resp){
+	MngCl.connect(MngIp, function(err, db) {
 
+    if (err) return shucher(resp, err);
+		var doc, x = JSON.parse(body);
+		
+		if(x.length<2) doc = { _id: new ObjId(x[0]) }
+		else {
+		  for(var i in x) x[i] = new ObjId(x[i]);
+		  doc = { _id: {"$in":x} };
+		}
 
-    /**
-     *  Setup termination handlers (for exit and a list of signals).
-     */
-    self.setupTerminationHandlers = function(){
-        //  Process on exit and signals.
-        process.on('exit', function() { self.terminator(); });
+		var cll = db.collection('clls');
+		var recs = cll.remove(doc,function(err, obj) {
+      if (err) return shucher(resp, err);
+			db.close();
+			resp.writeHead(200, {'Content-Type': 'text/plain' });
+			resp.end(JSON.stringify(obj));
+		});
+	});
+}
 
-        // Removed 'SIGPIPE' from the list - bugz 852598.
-        ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT',
-         'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGTERM'
-        ].forEach(function(element, index, array) {
-            process.on(element, function() { self.terminator(element); });
-        });
-    };
+function returnFile(fl, resp){
+    fs.readFile(fl, function (err,data) {
+      if (err) return shucher(resp, err);
+      resp.writeHead(200, {'Content-Type': 'text/html' });
+      resp.end(data);
+    });
+}
 
-
-    /*  ================================================================  */
-    /*  App server functions (main app logic here).                       */
-    /*  ================================================================  */
-
-    /**
-     *  Create the routing table entries + handlers for the application.
-     */
-    self.createRoutes = function() {
-        self.routes = { };
-
-        self.routes['/asciimo'] = function(req, res) {
-            var link = "http://i.imgur.com/kmbjB.png";
-            res.send("<html><body><img src='" + link + "'></body></html>");
-        };
-
-        self.routes['/'] = function(req, res) {
-            res.setHeader('Content-Type', 'text/html');
-            res.send(self.cache_get('index.html') );
-        };
-    };
-
-
-    /**
-     *  Initialize the server (express) and create the routes and register
-     *  the handlers.
-     */
-    self.initializeServer = function() {
-        self.createRoutes();
-        self.app = express.createServer();
-
-        //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
-        }
-    };
-
-
-    /**
-     *  Initializes the sample application.
-     */
-    self.initialize = function() {
-        self.setupVariables();
-        self.populateCache();
-        self.setupTerminationHandlers();
-
-        // Create the express server and routes.
-        self.initializeServer();
-    };
-
-
-    /**
-     *  Start the server (starts up the sample application).
-     */
-    self.start = function() {
-        //  Start the app on the specific interface (and port).
-        self.app.listen(self.port, self.ipaddress, function() {
-            console.log('%s: Node server started on %s:%d ...',
-                        Date(Date.now() ), self.ipaddress, self.port);
-        });
-    };
-
-};   /*  Sample Application.  */
-
-
-
-/**
- *  main():  Main code.
- */
-var zapp = new SampleApp();
-zapp.initialize();
-zapp.start();
-
+function shucher(res, err) {
+  var r = JSON.stringify(err);
+  console.log(r);
+  res.writeHead(200, {'Content-Type': 'text/plain' });
+  res.end('0');
+  return r;
+}
