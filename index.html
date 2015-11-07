@@ -31,8 +31,13 @@ function Send(msg) {
 
 function buldTable( txt ) {
   var x = JSON.parse(txt), L = x.length, t = '<table>';
-  for(var i=0; i<L; i++) t += '<TR><td>' + x[i]._id + '</td><td><input type="text" onChange="Rename(this)" value="' + x[i].file + '"></td><td>' + x[i].modified + '</td><td></TR>';
+  for(var i=0; i<L; i++) t += '<TR><td><input type="text" onChange="Rename(this)" value="' + x[i].file + '" ref="'+ x[i]._id +'"></td><td>' + getDF(x[i].modified) + '</td><td></TR>';
   id('out').innerHTML = t + '</table>';
+}
+
+function getDF(x){
+  var s = x.toString().split(' ');
+  return s[0] + ',&nbsp;' + s[2] + '&nbsp;' + s[1] + ',&nbsp;' + s[4];
 }
 
 function Rename( ob ) {
