@@ -56,7 +56,7 @@ function operate( js, resp ) {
 		        });
 		        return;
 		    case 'list':
-                cll.find().sort({modified:-1}).toArray(function(err, recs) {
+                cll.find({}, { file:1, modified:1 }).sort({modified:-1}).toArray(function(err, recs) {
                     if(err) return shucher(resp, err, db); db.close();
 			        resp.end(JSON.stringify(recs));
 		        });
@@ -73,6 +73,14 @@ function operate( js, resp ) {
                     if(err) return shucher(resp, err, db); db.close();
                     resp.end(JSON.stringify(obj));
                 });
+		        return;
+            case 'rename':
+                js.modified = new Date();
+                cll.update({ _id: new ObjId(js.id) }, {$set: { file: js.file}}, function(err, obj) {
+                    if(err) return shucher(resp, err, db); db.close();
+			        resp.end(JSON.stringify(obj));
+		        });
+		        return;
 		    default: shucher(resp, {error: 'Unknown command'}, db);
         }
     });
