@@ -42,12 +42,12 @@ function getDF(x){
 
 function Rename( ob ) {
   
-  var xID = ob.parentElement.previousSibling.innerHTML;
+  var xID = ob.getAttribue('ref');
   alert('id = ' + xID);
   
   var J = {};
   J.collection = 'files';
-  J.id = xID;
+  J.id = ob.getAttribue('ref');
   J.file = ob.value.trim();
   J.action = 'rename';
   Send( JSON.stringify(J) );
