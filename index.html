@@ -19,7 +19,7 @@ function Send(msg) {
     //xmlhttp.setRequestHeader("Content-Length", XMLtoSend.length);
     http.send(msg);
     
-    alert(http.responseText); return;
+    alert(http.responseText); return http.responseText;
 /*    
     var J = JSON.parse(http.responseText);
     alert('File: ' + J.file + '\nCollection: ' + J.collection + '\nAction: ' + J.action + '\nTheme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server  + '\nModified: ' + J.modified.toString() );
@@ -45,9 +45,17 @@ function Rename( ob ) {
   J.file = ob.value.trim();
   J.action = 'rename';
   Send( JSON.stringify(J) );
-  J.action = 'list';
-  Send( JSON.stringify(J) );
+
+  listIt();
 }
+
+function listIt() {
+  var J = {};
+  J.collection = 'files';
+  J.action = 'list';
+  buldTable( Send( JSON.stringify(J) ));
+}
+
 
 function id(x) { return document.getElementById(x); }
 function getAndSend( ob ) {
@@ -103,6 +111,7 @@ function getAndSend( ob ) {
   </tr>
 </table>
 
+<input type='button' onclick='listIt()' value='List!'><br>
 <div id='out'></div>
 </body>
 </html>
