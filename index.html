@@ -20,7 +20,7 @@ function Send(msg) {
     http.send(msg);
     
     var J = JSON.parse(http.responseText);
-    alert('File: ' + J.file + '\nCollection: ' + J.collection + '\nAction: ' + J.action + '\nTheme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server  + '\nModified: ' + J.modified.toStrin() );
+    alert('File: ' + J.file + '\nCollection: ' + J.collection + '\nAction: ' + J.action + '\nTheme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server  + '\nModified: ' + J.modified.toString() );
     return J;
   } catch(e) { alert(e.message); return 'Error!'; }
 }
@@ -56,7 +56,7 @@ function getAndSend( ob ) {
     <td>Theme:</td>
     <td>
       <TEXTAREA id='theme'>
-      Un oarecare text.
+      Primul. Un oarecare text.
       </TEXTAREA>
     </td>
   </tr>
@@ -64,7 +64,7 @@ function getAndSend( ob ) {
     <td>Content:</td>
     <td>
       <TEXTAREA id='content'>
-      Un oarecare text.
+      Al doilea. Un oarecare text.
       </TEXTAREA>
     </td>
   </tr>
