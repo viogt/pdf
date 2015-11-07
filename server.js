@@ -50,24 +50,26 @@ function operate( js, resp ) {
                     if(err) return shucher(resp, err, db); db.close();
                     resp.end(JSON.stringify(obj));
 		        });
+		        return;
 		    case 'list':
                 cll.find().sort({modified:-1}).toArray(function(err, recs) {
                     if(err) return shucher(resp, err, db); db.close();
 			        resp.end(JSON.stringify(recs));
 		        });
+		        return;
             case 'save':
                 js.modified = new Date();
                 cll.update({file: js.file}, js, {upsert: true}, function(err, obj) {
                     if(err) return shucher(resp, err, db); db.close();
 			        resp.end(JSON.stringify(obj));
 		        });
+		        return;
             case 'remove':
                 cll.remove( {file: js.file}, function(err, obj) {
                     if(err) return shucher(resp, err, db); db.close();
                     resp.end(JSON.stringify(obj));
                 });
-		default:
-                ;
+		    default: shucher(resp, {error: 'Unknown command'}, db);
         }
     });
 }

@@ -19,9 +19,12 @@ function Send(msg) {
     //xmlhttp.setRequestHeader("Content-Length", XMLtoSend.length);
     http.send(msg);
     
+    alert(http.responseText); return;
+/*    
     var J = JSON.parse(http.responseText);
     alert('File: ' + J.file + '\nCollection: ' + J.collection + '\nAction: ' + J.action + '\nTheme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server  + '\nModified: ' + J.modified.toString() );
     return J;
+*/
   } catch(e) { alert(e.message); return 'Error!'; }
 }
 
@@ -45,7 +48,6 @@ function getAndSend( ob ) {
     <td>Action:</td>
     <td>
       <select onChange='getAndSend(this)'>
-        <option>if exists</option>
         <option>list</option>
         <option>save</option>
         <option>remove</option>
