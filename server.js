@@ -29,12 +29,16 @@ http.createServer(function (req, res) {
     req.on('data', function (chunk) { body += chunk; });
   
     req.on('end', function () {
-        var J = JSON.parse(body);
+        try {
+            var J = JSON.parse(body);
+            operate( J, res );
+        } catch(e) { shucher(res, {error: 'Bad request/json'}, null); }
+/*
         J.server = 'OK';
         J.action += ' done!';
         J.modified = new Date();
         res.end( JSON.stringify(J) );
-        //operate( J, res );
+*/
     });
   
 }).listen(port, ipaddress);
