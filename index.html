@@ -24,8 +24,29 @@ function Send(msg) {
     var J = JSON.parse(http.responseText);
     alert('File: ' + J.file + '\nCollection: ' + J.collection + '\nAction: ' + J.action + '\nTheme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server  + '\nModified: ' + J.modified.toString() );
     return J;
+    1 - if ok, null if doesn't exist, ...list, ...0-error
 */
   } catch(e) { alert(e.message); return 'Error!'; }
+}
+
+function buldTable( txt ) {
+  var x = JSON.parse(txt), L = x.length, t = '<table>';
+  for(var i=0; i<L; i++) t += '<TR><td>' + x[i]._id + '</td><td><input type="text" onChange="Rename(this)" value="' + x[i].file + '"></td><td>' + x[i].modified + '</td><td></TR>';
+  id('out').innerHTML = t + '</table>';
+}
+
+function Rename( ob ) {
+  
+  var xID = ob.parentElement.previousSibling.innerHTML;
+  alert('id = ' + xID);
+  
+  var J = {};
+  J.collection = 'files';
+  J.file = ob.value.trim();
+  J.action = 'rename';
+  Send( JSON.stringify(J) );
+  J.action = 'list';
+  Send( JSON.stringify(J) );
 }
 
 function id(x) { return document.getElementById(x); }
@@ -81,5 +102,7 @@ function getAndSend( ob ) {
     </td>
   </tr>
 </table>
+
+<div id='out'></div>
 </body>
 </html>
