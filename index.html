@@ -6,7 +6,8 @@
   <title>PDF edit and create</title>
 
 <style>
-  TEXTAREA { width:200px; height: 4em; background-color: lightyellow; }
+  TEXTAREA { width:400px; height: 4em; background-color: lightyellow; }
+  TD { vertical-align: top; }
 </style>
 <script type="text/javascript">
 
@@ -19,16 +20,19 @@ function Send(msg) {
     http.send(msg);
     
     var J = JSON.parse(http.responseText);
-    alert('Theme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server);
+    alert('File: ' + J.file + '\nCollection: ' + J.collection + '\nAction: ' + J.action + '\nTheme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server  + '\nModified: ' + J.modified.toStrin() );
     return J;
   } catch(e) { alert(e.message); return 'Error!'; }
 }
 
 function id(x) { return document.getElementById(x); }
-function getAndSend() {
+function getAndSend( ob ) {
   var J = {};
+  J.collection = 'files';
+  J.file = 'The new PDF file';
   J.theme = id('theme').value.trim();
   J.content = id('content').value.trim();
+  J.action = ob.options[ob.selectedIndex].text;
   Send( JSON.stringify(J) );
 }
 
@@ -40,7 +44,7 @@ function getAndSend() {
   <tr>
     <td>Action:</td>
     <td>
-      <select onChange='getAndSend()'>
+      <select onChange='getAndSend(this)'>
         <option>If exists</option>
         <option>Save</option>
         <option>Delete</option>
