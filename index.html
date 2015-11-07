@@ -36,7 +36,7 @@ function buldTable( txt ) {
 }
 
 function getDF(x){
-  var s = x.toString().split(' ');
+  var s = (new Date(x)).toString().split(' ');
   return s[0] + ',&nbsp;' + s[2] + '&nbsp;' + s[1] + ',&nbsp;' + s[4];
 }
 
