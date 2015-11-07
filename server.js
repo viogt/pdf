@@ -4,7 +4,7 @@ var http  = require('http'),
     MngCl = Mng.MongoClient,
     ObjId = Mng.ObjectID,
     MngIp = 'mongodb://127.0.0.1:27017/test',
-    body  = '';
+    body;
 
 MngIp = 'mongodb://'+process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
 	process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
@@ -29,21 +29,16 @@ http.createServer(function (req, res) {
     return;
   }
   
-  if(req.url == '/insupd' || req.url == '/remove') {
-    
     body = '';
     req.on('data', function (chunk) { body += chunk; });
   
     req.on('end', function () {
-      var J = JSON.parse(body);
-      console.log('\nPOSTed: ' + body);
-
-      if(req.url == '/insupd') mongoInsert(res);
-      else mongoRemove(res);
+        res.end('from server ' + body);
+    
+    //var J = JSON.parse(body);
+    //console.log('\nPOSTed: ' + body);
     });
-  }
-  else res.end('Error: unknown request!');
-
+  
 }).listen(port, ipaddress);
 
 console.log('\n\t<...Working on 8080...>\n');

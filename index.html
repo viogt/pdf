@@ -7,9 +7,27 @@
 
 <style>
 </style>
+<script type="text/javascript">
+
+function Send(msg) {
+  try {
+    var http = new XMLHttpRequest();
+    http.open('POST', '/', false);
+    //xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+    //xmlhttp.setRequestHeader("Content-Length", XMLtoSend.length);
+    http.send(msg);
+    alert('Form SERVER:' + http.responseText);
+    return http.responseText;
+  } catch(e) { alert(e.message); return 'Error!'; }
+}
+
+</script>
 </head>
 <body>
   Am ajuns.<br>
   Acum sa vedem mai departe.
+  <TEXTAREA>
+    Un oarecare text.
+  </TEXTAREA>
 </body>
 </html>
