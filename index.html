@@ -42,6 +42,7 @@ function Rename( ob ) {
   
   var J = {};
   J.collection = 'files';
+  J.id = xID;
   J.file = ob.value.trim();
   J.action = 'rename';
   Send( JSON.stringify(J) );
