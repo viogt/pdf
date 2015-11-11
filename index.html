@@ -41,10 +41,10 @@ var Mng = {
   
   xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out',
   contextMenu: [
-    { text: 'Open', exe: 'Mng.getOne(Mng.curElem.innerHTML)' },
-    //{ text: 'Rename', exe: this.Rename(this.curElem.innerHTML,this.curElem.getAttribute("ref")) },
-    { text: 'Delete', exe: 'Mng.Delete();' },
-    { text: 'Download', exe: 'Mng.Download(Mng.curElem.innerHTML)' },
+    { text: 'Open', exe: function() { Mng.getOne();} },
+    { text: 'Rename', exe: function() { Mng.Rename();} },
+    { text: 'Delete', exe: function() { Mng.Delete(); } },
+    { text: 'Download', exe: function() { Mng.Download();} },
     { text: 'Cancel', exe: null}],
 
   Send: function( jsonMsg ) {
@@ -69,29 +69,29 @@ var Mng = {
     return s[0] + ',&nbsp;' + s[2] + '&nbsp;' + s[1] + ',&nbsp;' + s[4];
   },
   
-  Rename: function( fName, fId ) {
+  Rename: function() {
+    var fName = this.curElem.innerHTML;
     var res; if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
-    this.Send( { collection: this.xCollection, id: fId, file: res.trim(), action: 'rename' } );
+    this.Send( { collection: this.xCollection, id: this.curElem.getAttribute("ref"), file: fName, action: 'rename' } );
     this.listIt();
   },
   
   Delete: function() {
-    var fName = this.curElem.innerHTML;
-    if(!window.confirm("Delete " + fName + "?")) return;
-    this.Send( { collection: this.xCollection, file: fName, action: 'remove' } );
+    if(!window.confirm("Delete " + this.curElem.innerHTML + "?")) return;
+    this.Send( { collection: this.xCollection, file: this.curElem.innerHTML, action: 'remove' } );
     this.listIt();
   },
   
-  getOne: function( fName ) {
-    var r = this.Send( { collection: this.xCollection, file: fName, action: 'get one' } );
+  getOne: function() {
+    var r = this.Send( { collection: this.xCollection, file: this.curElem.innerHTML, action: 'get one' } );
     var j = JSON.parse(r);
     id(this.xTitle).value = j.file;
     id(this.xThems).value = j.theme;
     id(this.xContent).value = j.content;
   },
   
-  Download: function( fName ) {
-    this.Send( { collection: this.xCollection, file: fName, action: 'download' } );
+  Download: function() {
+    this.Send( { collection: this.xCollection, file: this.curElem.innerHTML, action: 'download' } );
   },
   
   listIt: function() {
