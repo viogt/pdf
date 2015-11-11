@@ -135,7 +135,7 @@ var Mng = {
       var li = document.createElement('li');
       u.appendChild(li);
       li.innerHTML = C[i].text;
-      li.addEventListener('click',C[i].exe);
+      li.addEventListener('click', this.Delete); //C[i].exe);
     }
     document.body.appendChild(u);
     this.cntxMenu = u;
