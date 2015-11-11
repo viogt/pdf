@@ -39,8 +39,14 @@
 
 var Mng = {
   
-  xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out', 
-  
+  xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out',
+  contextMenu: [
+    { text: 'Open', exe: 'Mng.getOne(Mng.curElem.innerHTML)' },
+    { text: 'Rename', exe: 'Mng.Rename(Mng.curElem.innerHTML,Mng.curElem.getAttribute("ref"))' },
+    { text: 'Delete', exe: 'Mng.Delete(Mng.curElem.innerHTML)' },
+    { text: 'Download', exe: 'Mng.Download(Mng.curElem.innerHTML)' },
+    { text: 'Cancel', exe: null}],
+
   Send: function( jsonMsg ) {
     try {
       var msg = JSON.stringify( jsonMsg );
@@ -124,11 +130,11 @@ var Mng = {
     var u = document.createElement('ul');
     u.className = 'custom-menu';
     u.id = 'mnu';
-    for (var i=0, L=this.cntxMenu.length; i<L; i++) {
+    for (var i=0, C=this.contextMenu, L=C.length; i<L; i++) {
       var li = document.createElement('li');
       u.appendChild(li);
-      li.innerHTML=li.innerHTML + this.cntxMenu[i].text;
-      li.onclick = this.cntxMenu[i].click;
+      li.innerHTML=li.innerHTML + C[i].text;
+      li.onclick = C[i].exe;
     }
     document.body.appendChild(u);
     this.cntxMenu = u;
