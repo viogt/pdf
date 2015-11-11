@@ -100,12 +100,12 @@ var Mng = {
     e.preventDefault();
     if(this.curElem) this.curElem.style.backgroundColor = '';
     (this.curElem = obj).style.backgroundColor = 'yellow';
-    var m = id('mnu').style, pos = this.getPosition(e);
+    var m = id(this.mnuCntx).style, pos = this.getPosition(e);
       m.top = pos.y + 'px';
       m.left = pos.x + 'px';
       m.display = 'block';
         document.addEventListener('click', function(e) {
-          id('mnu').style.display = 'none';
+          id(Mng.mnuCntx).style.display = 'none';
           document.removeEventListener("click");
           this.curElem.style.backgroundColor = ''; this.curElem = null;
         });
@@ -116,7 +116,7 @@ var Mng = {
     if(!e) e = window.event;
     if(e.pageX || e.pageY) return({ x: e.pageX, y: e.pageY });
     else if(e.clientX || e.clientY) return({ x: e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft, y: e.clientY + document.body.scrollTop + document.documentElement.scrollTop });
-    return { x:0, y:0 }
+    return { x:0, y:0 };
   }
 }
 
