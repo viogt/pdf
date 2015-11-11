@@ -48,7 +48,7 @@ function Send( jsonMsg) {
 
 function buildTable( txt ) {
   var x = JSON.parse(txt), L = x.length, t = '<table>';
-  for(var i=0; i<L; i++) t += '<TR><td><input type="text" onChange="Rename(this)" value="' + x[i].file + '" ref="'+ x[i]._id +'" oncontextmenu="rClick(event)"></td><td>' + getDF(x[i].modified) + '</td><td></TR>';
+  for(var i=0; i<L; i++) t += '<TR><td><input type="text" onChange="Rename(this)" value="' + x[i].file + '" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)"></td><td>' + getDF(x[i].modified) + '</td><td></TR>';
   id('out').innerHTML = t + '</table>';
 }
 
@@ -76,8 +76,9 @@ function getAndSend( ob ) {
   listIt();
 }
 
-function rClick(e) {
+function rClick( e, obj ) {
   e.preventDefault();
+  obj.style.backgroundColor = 'yellow';
   var m = id('mnu').style, pos = getPosition(e);
     m.top = pos.y + 'px';
     m.left = pos.x + 'px';
@@ -85,6 +86,7 @@ function rClick(e) {
       document.addEventListener('click', function(e) {
         id('mnu').style.display = 'none';
         document.removeEventListener("click");
+        obj.style.backgroundColor = 'yellow';
       });
   return false;
 }
