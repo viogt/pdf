@@ -48,7 +48,7 @@ function Send( jsonMsg) {
 
 function buildTable( txt ) {
   var x = JSON.parse(txt), L = x.length, t = '<table>';
-  for(var i=0; i<L; i++) t += '<TR><td ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)">'+x[i].file+'</td><td>' + getDF(x[i].modified) + '</td><td></TR>';
+  for(var i=0; i<L; i++) t += '<TR><td ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td>' + getDF(x[i].modified) + '</td><td></TR>';
   id('out').innerHTML = t + '</table>';
 }
 
@@ -69,6 +69,15 @@ function Delete( fName ) {
   listIt();
 }
 
+function getOne( fName ) {
+  var r = Send( { collection: 'files', file: fName, action: 'get one' } );
+  alert(r);
+  var j = JSON.parse(r);
+  id('title').value - j.file;
+  id('theme').value - j.theme;
+  id('content').value - j.content;
+}
+
 function listIt() {
   buildTable( Send( { collection: 'files', action: 'list' } ));
 }
@@ -82,6 +91,7 @@ function getAndSend( ob ) {
 var curElem = null;
 function rClick( e, obj ) {
   e.preventDefault();
+  if(curElem) curElem.style.backgroundColor = '';
   (curElem = obj).style.backgroundColor = 'yellow';
   var m = id('mnu').style, pos = getPosition(e);
     m.top = pos.y + 'px';
@@ -153,10 +163,10 @@ function getPosition(e) {
 <div id='out'></div>
 
 <ul id='mnu' class='custom-menu'>
-  <li onclick='alert(curElem.value)'>First thing</li>
+  <li onclick='getOne(curElem.innerHTML)'>Open</li>
   <li onclick='Rename(curElem.innerHTML,curElem.getAttribute("ref"))'>Rename</li>
   <li onclick='Delete(curElem.innerHTML)'>Delete</li>
-  <li>Third thing</li>
+  <li>Cancel</li>
 </ul>
 
 </body>
