@@ -39,7 +39,7 @@
 
 var Mgn = {
   
-  curElem: null,
+  curElem: null, mnuCntx: 'mnu', xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out', 
   
   Send: function( jsonMsg ) {
     try {
@@ -55,7 +55,7 @@ var Mgn = {
   buildTable: function( txt ) {
     var x = JSON.parse(txt), L = x.length, t = '<table>';
     for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
-    id('out').innerHTML = t + '</table>';
+    id(this.tblOut).innerHTML = t + '</table>';
   },
   
   getDF: function(x){
@@ -78,9 +78,9 @@ var Mgn = {
   getOne: function( fName ) {
     var r = this.Send( { collection: 'files', file: fName, action: 'get one' } );
     var j = JSON.parse(r);
-    id('title').value = j.file;
-    id('theme').value = j.theme;
-    id('content').value = j.content;
+    id(this.xTitle).value = j.file;
+    id(this.xThems).value = j.theme;
+    id(this.xContent).value = j.content;
   },
   
   Download: function( fName ) {
@@ -125,7 +125,7 @@ function id(x) { return document.getElementById(x); }
 
 </script>
 </head>
-<body onload='listIt()'>
+<body onload='Mng.listIt()'>
 
 <table>
   <tr>
