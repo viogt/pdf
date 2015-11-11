@@ -73,20 +73,22 @@ function Delete( fName ) {
 
 function getOne( fName ) {
   var r = Send( { collection: 'files', file: fName, action: 'get one' } );
-  alert(r);
   var j = JSON.parse(r);
   id('title').value = j.file;
   id('theme').value = j.theme;
   id('content').value = j.content;
 }
 
+function Download( fName ) {
+  Send( { collection: 'files', file: fName, action: 'download' } );
+}
 function listIt() {
   buildTable( Send( { collection: 'files', action: 'list' } ));
 }
 
 function id(x) { return document.getElementById(x); }
-function getAndSend( ob ) {
-  Send( { collection: 'files', file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: ob.options[ob.selectedIndex].text } );
+function Save() {
+  Send( { collection: 'files', file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: 'save' } );
   listIt();
 }
 
@@ -116,19 +118,13 @@ function getPosition(e) {
 
 </script>
 </head>
-<body>
+<body onload='listIt()'>
 
 <table>
   <tr>
     <td>Action:</td>
     <td>
-      <select onChange='getAndSend(this)'>
-        <option>list</option>
-        <option>save</option>
-        <option>remove</option>
-        <option>rename</option>
-        <option>get one</option>
-      </select>
+      <input type='button' value='Save' onClick='Save()'>
     </td>
   </tr>
   <tr>
@@ -161,13 +157,13 @@ function getPosition(e) {
   </tr>
 </table>
 
-<input type='button' onclick='listIt()' value='List!'><br>
 <div id='out'></div>
 
 <ul id='mnu' class='custom-menu'>
   <li onclick='getOne(curElem.innerHTML)'>Open</li>
   <li onclick='Rename(curElem.innerHTML,curElem.getAttribute("ref"))'>Rename</li>
   <li onclick='Delete(curElem.innerHTML)'>Delete</li>
+  <li onclick='Download(curElem.innerHTML)'>Download</li>
   <li>Cancel</li>
 </ul>
 

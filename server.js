@@ -78,6 +78,15 @@ function operate( js, resp ) {
 			        resp.end(JSON.stringify(obj));
 		        });
 		        return;
+            case 'download':
+                cll.findOne({file: js.file}, function(err, obj) {
+                    if(err) return shucher(resp, err, db); db.close();
+	                resp.writeHead(200, {'Content-disposition': 'attachment; filename='+obj.file});
+                    var html = '<HTML><HEAD><TITLE>' + obj.file + '</TITLE><STYLE>' + obj.theme + '</STYLE></HEAD>';
+	                html += '<BODY>' + obj.content + '</BODY></HTML>';
+                    resp.end(html);
+		        });
+		        return;
 		    default: shucher(resp, {error: 'Unknown command'}, db);
         }
     });
