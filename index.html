@@ -39,7 +39,7 @@
 
 var Mng = {
   
-  xCollection: 'files', curElem: null, mnuCntx: 'mnu', xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out', 
+  xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out', 
   
   Send: function( jsonMsg ) {
     try {
@@ -100,7 +100,8 @@ var Mng = {
     e.preventDefault();
     if(this.curElem) this.curElem.style.backgroundColor = '';
     (this.curElem = obj).style.backgroundColor = 'yellow';
-    var m = id(this.mnuCntx).style, pos = this.getPosition(e);
+    if(this.cntxMenu == null) this.createCntx();
+    var m = this.cntxMenu.style, pos = this.getPosition(e);
       m.top = pos.y + 'px';
       m.left = pos.x + 'px';
       m.display = 'block';
@@ -117,6 +118,20 @@ var Mng = {
     if(e.pageX || e.pageY) return({ x: e.pageX, y: e.pageY });
     else if(e.clientX || e.clientY) return({ x: e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft, y: e.clientY + document.body.scrollTop + document.documentElement.scrollTop });
     return { x:0, y:0 };
+  },
+  
+  createCntx: function() {
+    var u = document.createElement('ul');
+    u.className = 'custom-menu';
+    u.id = 'mnu';
+    for (var i=0, L=this.cntxMenu.length; i<L; i++) {
+      var li = document.createElement('li');
+      u.appendChild(li);
+      li.innerHTML=li.innerHTML + this.cntxMenu[i].text;
+      li.onclick = this.cntxMenu[i].click;
+    }
+    document.body.appendChild(u);
+    this.cntxMenu = u;
   }
 }
 
@@ -166,13 +181,13 @@ function id(x) { return document.getElementById(x); }
 
 <div id='out'></div>
 
-<ul id='mnu' class='custom-menu'>
+<!-- <ul id='mnu' class='custom-menu'>
   <li onclick='Mng.getOne(Mng.curElem.innerHTML)'>Open</li>
   <li onclick='Mng.Rename(Mng.curElem.innerHTML,Mng.curElem.getAttribute("ref"))'>Rename</li>
   <li onclick='Mng.Delete(Mng.curElem.innerHTML)'>Delete</li>
   <li onclick='Mng.Download(Mng.curElem.innerHTML)'>Download</li>
   <li>Cancel</li>
-</ul>
+</ul> -->
 
 </body>
 </html>
