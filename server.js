@@ -22,21 +22,13 @@ http.createServer(function (req, res) {
     else res.end('Error: unknown request!');
     return;
   }
-  
     body = '';
     req.on('data', function (chunk) { body += chunk; });
-  
     req.on('end', function () {
         try {
             var J = JSON.parse(body);
             operate( J, res );
         } catch(e) { shucher(res, {error: 'Bad request/json'}, null); }
-/*
-        J.server = 'OK';
-        J.action += ' done!';
-        J.modified = new Date();
-        res.end( JSON.stringify(J) );
-*/
     });
   
 }).listen(port, ipaddress);

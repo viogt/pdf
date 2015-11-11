@@ -37,84 +37,91 @@
 </style>
 <script type="text/javascript">
 
-function Send( jsonMsg) {
-  try {
-    var msg = JSON.stringify( jsonMsg )
-    var http = new XMLHttpRequest();
-    http.open('POST', '/', false);
-    http.send(msg);
-    if(http.responseText.charAt(0) == '0') { alert(http.responseText.substr(1)); return false; }
-    return http.responseText;
-  } catch(e) { alert(e.message); return 'Error!'; }
-}
+var Mgn = {
+  
+  curElem: null,
+  
+  Send: function( jsonMsg ) {
+    try {
+      var msg = JSON.stringify( jsonMsg )
+      var http = new XMLHttpRequest();
+      http.open('POST', '/', false);
+      http.send(msg);
+      if(http.responseText.charAt(0) == '0') { alert(http.responseText.substr(1)); return false; }
+      return http.responseText;
+    } catch(e) { alert(e.message); return 'Error!'; }
+  },
+  
+  buildTable: function( txt ) {
+    var x = JSON.parse(txt), L = x.length, t = '<table>';
+    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
+    id('out').innerHTML = t + '</table>';
+  },
+  
+  getDF: function(x){
+    var s = (new Date(x)).toString().split(' ');
+    return s[0] + ',&nbsp;' + s[2] + '&nbsp;' + s[1] + ',&nbsp;' + s[4];
+  },
+  
+  Rename: function( fName, fId ) {
+    var res; if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
+    this.Send( { collection: 'files', id: fId, file: res.trim(), action: 'rename' } );
+    this.listIt();
+  },
+  
+  Delete: function( fName ) {
+    if(!window.confirm("Delete " + fName + "?")) return;
+    this.Send( { collection: 'files', file: fName, action: 'remove' } );
+    this.listIt();
+  },
+  
+  getOne: function( fName ) {
+    var r = this.Send( { collection: 'files', file: fName, action: 'get one' } );
+    var j = JSON.parse(r);
+    id('title').value = j.file;
+    id('theme').value = j.theme;
+    id('content').value = j.content;
+  },
+  
+  Download: function( fName ) {
+    this.Send( { collection: 'files', file: fName, action: 'download' } );
+  },
+  
+  listIt: function() {
+    this.buildTable( this.Send( { collection: 'files', action: 'list' } ));
+  },
+  
+  Save: function() {
+    this.Send( { collection: 'files', file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: 'save' } );
+    this.listIt();
+  },
+  
+  rClick: function( e, obj ) {
+    e.preventDefault();
+    if(this.curElem) this.curElem.style.backgroundColor = '';
+    (this.curElem = obj).style.backgroundColor = 'yellow';
+    var m = id('mnu').style, pos = this.getPosition(e);
+      m.top = pos.y + 'px';
+      m.left = pos.x + 'px';
+      m.display = 'block';
+        document.addEventListener('click', function(e) {
+          id('mnu').style.display = 'none';
+          document.removeEventListener("click");
+          this.curElem.style.backgroundColor = ''; this.curElem = null;
+        });
+    return false;
+  },
 
-function buildTable( txt ) {
-  var x = JSON.parse(txt), L = x.length, t = '<table>';
-  for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td class="Fdt">' + getDF(x[i].modified) + '</td><td></TR>';
-  id('out').innerHTML = t + '</table>';
-}
-
-function getDF(x){
-  var s = (new Date(x)).toString().split(' ');
-  return s[0] + ',&nbsp;' + s[2] + '&nbsp;' + s[1] + ',&nbsp;' + s[4];
-}
-
-function Rename( fName, fId ) {
-  var res; if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
-  Send( { collection: 'files', id: fId, file: res.trim(), action: 'rename' } );
-  listIt();
-}
-
-function Delete( fName ) {
-  if(!window.confirm("Delete " + fName + "?")) return;
-  Send( { collection: 'files', file: fName, action: 'remove' } );
-  listIt();
-}
-
-function getOne( fName ) {
-  var r = Send( { collection: 'files', file: fName, action: 'get one' } );
-  var j = JSON.parse(r);
-  id('title').value = j.file;
-  id('theme').value = j.theme;
-  id('content').value = j.content;
-}
-
-function Download( fName ) {
-  Send( { collection: 'files', file: fName, action: 'download' } );
-}
-function listIt() {
-  buildTable( Send( { collection: 'files', action: 'list' } ));
+  getPosition: function(e) {
+    if(!e) e = window.event;
+    if(e.pageX || e.pageY) return({ x: e.pageX, y: e.pageY });
+    else if(e.clientX || e.clientY) return({ x: e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft, y: e.clientY + document.body.scrollTop + document.documentElement.scrollTop });
+    return { x:0, y:0 }
+  }
 }
 
 function id(x) { return document.getElementById(x); }
-function Save() {
-  Send( { collection: 'files', file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: 'save' } );
-  listIt();
-}
 
-var curElem = null;
-function rClick( e, obj ) {
-  e.preventDefault();
-  if(curElem) curElem.style.backgroundColor = '';
-  (curElem = obj).style.backgroundColor = 'yellow';
-  var m = id('mnu').style, pos = getPosition(e);
-    m.top = pos.y + 'px';
-    m.left = pos.x + 'px';
-    m.display = 'block';
-      document.addEventListener('click', function(e) {
-        id('mnu').style.display = 'none';
-        document.removeEventListener("click");
-        curElem.style.backgroundColor = ''; curElem = null;
-      });
-  return false;
-}
-
-function getPosition(e) {
-  if(!e) e = window.event;
-  if(e.pageX || e.pageY) return({ x: e.pageX, y: e.pageY });
-  else if(e.clientX || e.clientY) return({ x: e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft, y: e.clientY + document.body.scrollTop + document.documentElement.scrollTop });
-  return { x:0, y:0 }
-}
 
 </script>
 </head>
@@ -124,7 +131,7 @@ function getPosition(e) {
   <tr>
     <td>Action:</td>
     <td>
-      <input type='button' value='Save' onClick='Save()'>
+      <input type='button' value='Save' onClick='Mng.Save()'>
     </td>
   </tr>
   <tr>
@@ -160,10 +167,10 @@ function getPosition(e) {
 <div id='out'></div>
 
 <ul id='mnu' class='custom-menu'>
-  <li onclick='getOne(curElem.innerHTML)'>Open</li>
-  <li onclick='Rename(curElem.innerHTML,curElem.getAttribute("ref"))'>Rename</li>
-  <li onclick='Delete(curElem.innerHTML)'>Delete</li>
-  <li onclick='Download(curElem.innerHTML)'>Download</li>
+  <li onclick='Mng.getOne(curElem.innerHTML)'>Open</li>
+  <li onclick='Mng.Rename(curElem.innerHTML,curElem.getAttribute("ref"))'>Rename</li>
+  <li onclick='Mng.Delete(curElem.innerHTML)'>Delete</li>
+  <li onclick='Mng.Download(curElem.innerHTML)'>Download</li>
   <li>Cancel</li>
 </ul>
 

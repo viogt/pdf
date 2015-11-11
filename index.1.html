@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>PDF edit and create</title>
+
+<style>
+  TEXTAREA { width:400px; height: 4em; background-color: lightyellow; }
+  TD { vertical-align: top; }
+  
+  .custom-menu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid gray;
+    white-space: nowrap;
+    font: normal 12px Arial,Sans;
+    background: white;
+    color: #444;
+    border-radius: 5px;
+    padding: 12px;
+    box-shadow: 0px 2px 12px gray;
+  }
+  .custom-menu li {
+    padding: 4px;
+    cursor: pointer;
+    list-style-type: none;
+  }
+  .custom-menu li:hover {
+    color: white;
+    background-color: #555599;
+  }
+  .Fdt { font:normal 10pt Helvetica,Arial; color: darkblue; }
+  .Fdt:hover { background-color: lightblue; cursor: pointer; }
+</style>
+<script type="text/javascript">
+
+function Send( jsonMsg) {
+  try {
+    var msg = JSON.stringify( jsonMsg )
+    var http = new XMLHttpRequest();
+    http.open('POST', '/', false);
+    http.send(msg);
+    if(http.responseText.charAt(0) == '0') { alert(http.responseText.substr(1)); return false; }
+    return http.responseText;
+  } catch(e) { alert(e.message); return 'Error!'; }
+}
+
+function buildTable( txt ) {
+  var x = JSON.parse(txt), L = x.length, t = '<table>';
+  for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td class="Fdt">' + getDF(x[i].modified) + '</td><td></TR>';
+  id('out').innerHTML = t + '</table>';
+}
+
+function getDF(x){
+  var s = (new Date(x)).toString().split(' ');
+  return s[0] + ',&nbsp;' + s[2] + '&nbsp;' + s[1] + ',&nbsp;' + s[4];
+}
+
+function Rename( fName, fId ) {
+  var res; if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
+  Send( { collection: 'files', id: fId, file: res.trim(), action: 'rename' } );
+  listIt();
+}
+
+function Delete( fName ) {
+  if(!window.confirm("Delete " + fName + "?")) return;
+  Send( { collection: 'files', file: fName, action: 'remove' } );
+  listIt();
+}
+
+function getOne( fName ) {
+  var r = Send( { collection: 'files', file: fName, action: 'get one' } );
+  var j = JSON.parse(r);
+  id('title').value = j.file;
+  id('theme').value = j.theme;
+  id('content').value = j.content;
+}
+
+function Download( fName ) {
+  Send( { collection: 'files', file: fName, action: 'download' } );
+}
+function listIt() {
+  buildTable( Send( { collection: 'files', action: 'list' } ));
+}
+
+function id(x) { return document.getElementById(x); }
+function Save() {
+  Send( { collection: 'files', file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: 'save' } );
+  listIt();
+}
+
+var curElem = null;
+function rClick( e, obj ) {
+  e.preventDefault();
+  if(curElem) curElem.style.backgroundColor = '';
+  (curElem = obj).style.backgroundColor = 'yellow';
+  var m = id('mnu').style, pos = getPosition(e);
+    m.top = pos.y + 'px';
+    m.left = pos.x + 'px';
+    m.display = 'block';
+      document.addEventListener('click', function(e) {
+        id('mnu').style.display = 'none';
+        document.removeEventListener("click");
+        curElem.style.backgroundColor = ''; curElem = null;
+      });
+  return false;
+}
+
+function getPosition(e) {
+  if(!e) e = window.event;
+  if(e.pageX || e.pageY) return({ x: e.pageX, y: e.pageY });
+  else if(e.clientX || e.clientY) return({ x: e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft, y: e.clientY + document.body.scrollTop + document.documentElement.scrollTop });
+  return { x:0, y:0 }
+}
+
+</script>
+</head>
+<body onload='listIt()'>
+
+<table>
+  <tr>
+    <td>Action:</td>
+    <td>
+      <input type='button' value='Save' onClick='Save()'>
+    </td>
+  </tr>
+  <tr>
+    <td>File:</td>
+    <td>
+      <TEXTAREA id='title'>
+      A new PDF file/title.
+      </TEXTAREA>
+    </td>
+  </tr>
+  <tr>
+    <td>Theme:</td>
+    <td>
+      <TEXTAREA id='theme'>
+      body { font:normal 12pt Verdana; color:darkblue; }
+      i { color:blue; }
+      </TEXTAREA>
+    </td>
+  </tr>
+  <tr>
+    <td>Content:</td>
+    <td>
+      <TEXTAREA id='content'>
+      Al doilea. Un <i>oarecare</i> text.<br>
+      Aici continua cu titlul.<br>
+      <h1>Vine titlul</h1>
+      Acum continuam fara titlu.
+      </TEXTAREA>
+    </td>
+  </tr>
+</table>
+
+<div id='out'></div>
+
+<ul id='mnu' class='custom-menu'>
+  <li onclick='getOne(curElem.innerHTML)'>Open</li>
+  <li onclick='Rename(curElem.innerHTML,curElem.getAttribute("ref"))'>Rename</li>
+  <li onclick='Delete(curElem.innerHTML)'>Delete</li>
+  <li onclick='Download(curElem.innerHTML)'>Download</li>
+  <li>Cancel</li>
+</ul>
+
+</body>
+</html>
