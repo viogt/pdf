@@ -20,11 +20,11 @@
     background: white;
     color: #444;
     border-radius: 5px;
-    padding: 12px;
+    padding: 8px;
     box-shadow: 0px 2px 12px gray;
   }
   .custom-menu li {
-    padding: 4px;
+    padding: 2px;
     cursor: pointer;
     list-style-type: none;
   }
@@ -112,7 +112,7 @@ var Mng = {
       m.left = pos.x + 'px';
       m.display = 'block';
         document.addEventListener('click', function(e) {
-          id(Mng.mnuCntx).style.display = 'none';
+          Mng.mnuCntx.style.display = 'none';
           document.removeEventListener("click");
           Mng.curElem.style.backgroundColor = ''; Mng.curElem = null;
         });
@@ -133,8 +133,8 @@ var Mng = {
     for (var i=0, C=this.contextMenu, L=C.length; i<L; i++) {
       var li = document.createElement('li');
       u.appendChild(li);
-      li.innerHTML=li.innerHTML + C[i].text;
-      li.onclick = C[i].exe;
+      li.innerHTML = C[i].text;
+      li.addEventListener('click',C[i].exe);
     }
     document.body.appendChild(u);
     this.cntxMenu = u;
