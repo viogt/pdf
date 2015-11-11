@@ -48,7 +48,7 @@ function Send( jsonMsg) {
 
 function buildTable( txt ) {
   var x = JSON.parse(txt), L = x.length, t = '<table>';
-  for(var i=0; i<L; i++) t += '<TR><td><input type="text" onChange="Rename(this)" value="' + x[i].file + '" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)"></td><td>' + getDF(x[i].modified) + '</td><td></TR>';
+  for(var i=0; i<L; i++) t += '<TR><td ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)">'+x[i].file+'</td><td>' + getDF(x[i].modified) + '</td><td></TR>';
   id('out').innerHTML = t + '</table>';
 }
 
@@ -154,8 +154,8 @@ function getPosition(e) {
 
 <ul id='mnu' class='custom-menu'>
   <li onclick='alert(curElem.value)'>First thing</li>
-  <li onclick='Rename(curElem.value,curElem.getAttribute('ref'))'>Rename</li>
-  <li onclick='Delete(curElem.value)'>Delete</li>
+  <li onclick='Rename(curElem.innerHTML,curElem.getAttribute("ref"))'>Rename</li>
+  <li onclick='Delete(curElem.innerHTML)'>Delete</li>
   <li>Third thing</li>
 </ul>
 
