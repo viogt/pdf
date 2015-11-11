@@ -107,7 +107,7 @@ var Mng = {
         document.addEventListener('click', function(e) {
           id(Mng.mnuCntx).style.display = 'none';
           document.removeEventListener("click");
-          this.curElem.style.backgroundColor = ''; this.curElem = null;
+          Mng.curElem.style.backgroundColor = ''; Mng.curElem = null;
         });
     return false;
   },
