@@ -42,8 +42,9 @@ var Mgn = {
   curElem: null, mnuCntx: 'mnu', xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out', 
   
   Send: function( jsonMsg ) {
+    alert('Am ajuns 1');
     try {
-      var msg = JSON.stringify( jsonMsg )
+      var msg = JSON.stringify( jsonMsg );
       var http = new XMLHttpRequest();
       http.open('POST', '/', false);
       http.send(msg);
@@ -53,6 +54,7 @@ var Mgn = {
   },
   
   buildTable: function( txt ) {
+    alert('Am ajuns 2');
     var x = JSON.parse(txt), L = x.length, t = '<table>';
     for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
     id('out').innerHTML = t + '</table>';
@@ -88,6 +90,7 @@ var Mgn = {
   },
   
   listIt: function() {
+    alert('Am ajuns!');
     this.buildTable( this.Send( { collection: 'files', action: 'list' } ));
   },
   
