@@ -32,6 +32,8 @@
     color: white;
     background-color: #555599;
   }
+  .Fdt { font:normal 10pt Helvetica,Arial; color: darkblue; }
+  .Fdt:hover { background-color: lightblue; cursor: pointer; }
 </style>
 <script type="text/javascript">
 
@@ -48,7 +50,7 @@ function Send( jsonMsg) {
 
 function buildTable( txt ) {
   var x = JSON.parse(txt), L = x.length, t = '<table>';
-  for(var i=0; i<L; i++) t += '<TR><td ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td>' + getDF(x[i].modified) + '</td><td></TR>';
+  for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td class="Fdt">' + getDF(x[i].modified) + '</td><td></TR>';
   id('out').innerHTML = t + '</table>';
 }
 
@@ -73,9 +75,9 @@ function getOne( fName ) {
   var r = Send( { collection: 'files', file: fName, action: 'get one' } );
   alert(r);
   var j = JSON.parse(r);
-  id('title').value - j.file;
-  id('theme').value - j.theme;
-  id('content').value - j.content;
+  id('title').value = j.file;
+  id('theme').value = j.theme;
+  id('content').value = j.content;
 }
 
 function listIt() {
