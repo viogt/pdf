@@ -46,6 +46,12 @@ var Mng = {
     { text: 'Delete', exe: function() { Mng.Delete(); } },
     { text: 'Download', exe: function() { Mng.Download();} },
     { text: 'Cancel', exe: null}],
+  
+  showOne: function( o ) {
+    if(!this.curElem) this.curElem = o.innerHTML;
+    this.getOne();
+    this.curElem = null;
+  },
 
   Send: function( jsonMsg ) {
     try {
@@ -60,7 +66,7 @@ var Mng = {
   
   buildTable: function( txt ) {
     var x = JSON.parse(txt), L = x.length, t = '<table>';
-    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.getOne()">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
+    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.showOne(this)">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
     id(this.tblOut).innerHTML = t + '</table>';
   },
   
@@ -187,14 +193,5 @@ function id(x) { return document.getElementById(x); }
 </table>
 
 <div id='out'></div>
-
-<!-- <ul id='mnu' class='custom-menu'>
-  <li onclick='Mng.getOne(Mng.curElem.innerHTML)'>Open</li>
-  <li onclick='Mng.Rename(Mng.curElem.innerHTML,Mng.curElem.getAttribute("ref"))'>Rename</li>
-  <li onclick='Mng.Delete(Mng.curElem.innerHTML)'>Delete</li>
-  <li onclick='Mng.Download(Mng.curElem.innerHTML)'>Download</li>
-  <li>Cancel</li>
-</ul> -->
-
 </body>
 </html>
