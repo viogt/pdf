@@ -42,8 +42,8 @@ var Mng = {
   xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out',
   contextMenu: [
     { text: 'Open', exe: 'Mng.getOne(Mng.curElem.innerHTML)' },
-    { text: 'Rename', exe: this.Rename(this.curElem.innerHTML,this.curElem.getAttribute("ref")) },
-    { text: 'Delete', exe: 'Mng.Delete(Mng.curElem.innerHTML)' },
+    //{ text: 'Rename', exe: this.Rename(this.curElem.innerHTML,this.curElem.getAttribute("ref")) },
+    { text: 'Delete', exe: this.Delete },
     { text: 'Download', exe: 'Mng.Download(Mng.curElem.innerHTML)' },
     { text: 'Cancel', exe: null}],
 
@@ -75,7 +75,8 @@ var Mng = {
     this.listIt();
   },
   
-  Delete: function( fName ) {
+  Delete: function() {
+    var fName = this.curElem.innerHTML;
     if(!window.confirm("Delete " + fName + "?")) return;
     this.Send( { collection: this.xCollection, file: fName, action: 'remove' } );
     this.listIt();
