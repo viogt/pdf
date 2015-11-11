@@ -43,7 +43,7 @@ var Mng = {
   contextMenu: [
     { text: 'Open', exe: 'Mng.getOne(Mng.curElem.innerHTML)' },
     //{ text: 'Rename', exe: this.Rename(this.curElem.innerHTML,this.curElem.getAttribute("ref")) },
-    { text: 'Delete', exe: Mng.Delete },
+    { text: 'Delete', exe: function() { Mng.Delete(); } },
     { text: 'Download', exe: 'Mng.Download(Mng.curElem.innerHTML)' },
     { text: 'Cancel', exe: null}],
 
@@ -135,7 +135,7 @@ var Mng = {
       var li = document.createElement('li');
       u.appendChild(li);
       li.innerHTML = C[i].text;
-      li.addEventListener('click', this.Delete); //C[i].exe);
+      li.addEventListener('click', C[i].exe);
     }
     document.body.appendChild(u);
     this.cntxMenu = u;
