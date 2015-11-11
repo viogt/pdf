@@ -66,6 +66,11 @@ function Rename( ob ) {
   listIt();
 }
 
+function Delete(ob) {
+  Send( { collection: 'files', file: ob.value.trim(), action: 'remove' } );
+  listIt();
+}
+
 function listIt() {
   buildTable( Send( { collection: 'files', action: 'list' } ));
 }
@@ -87,7 +92,7 @@ function rClick( e, obj ) {
       document.addEventListener('click', function(e) {
         id('mnu').style.display = 'none';
         document.removeEventListener("click");
-        curElem.style.backgroundColor = 'yellow'; curElem = null;
+        curElem.style.backgroundColor = ''; curElem = null;
       });
   return false;
 }
@@ -150,9 +155,9 @@ function getPosition(e) {
 <div id='out'></div>
 
 <ul id='mnu' class='custom-menu'>
-  <li data-action="first" onclick='alert(curElem.value)'>First thing</li>
-  <li data-action="second">Second thing</li>
-  <li data-action="third">Third thing</li>
+  <li onclick='alert(curElem.value)'>First thing</li>
+  <li onclick='Delete(curElem.value)'>Delete</li>
+  <li>Third thing</li>
 </ul>
 
 </body>
