@@ -45,7 +45,7 @@ http.createServer(function (req, res) {
 
 function operate( js, resp ) {
     resp.writeHead(200, {'Content-Type': 'text/plain' });
-    MngCl.connect(MngIp, function(err, db) {
+    Mng.MongoClient.connect(MngIp, function(err, db) {
         if(err) return shucher(resp, err, null);
         var cll = db.collection( js.collection );
         switch( js.action ) {
@@ -75,7 +75,7 @@ function operate( js, resp ) {
                 });
 		        return;
             case 'rename':
-                cll.update({ _id: new ObjId(unescape(js.id)) }, {$set: { file: js.file, modified: new Date() }}, function(err, obj) {
+                cll.update({ _id: new Mng.ObjectID(js.id) }, {$set: { file: js.file, modified: new Date() }}, function(err, obj) {
                     if(err) return shucher(resp, err, db); db.close();
 			        resp.end(JSON.stringify(obj));
 		        });

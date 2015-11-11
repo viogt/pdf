@@ -11,21 +11,14 @@
 </style>
 <script type="text/javascript">
 
-function Send(msg) {
+function Send( jsonMsg) {
   try {
+    var msg = JSON.stringify( jsonMsg )
     var http = new XMLHttpRequest();
     http.open('POST', '/', false);
-    //xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-    //xmlhttp.setRequestHeader("Content-Length", XMLtoSend.length);
     http.send(msg);
-    
-    alert(http.responseText); return http.responseText;
-/*    
-    var J = JSON.parse(http.responseText);
-    alert('File: ' + J.file + '\nCollection: ' + J.collection + '\nAction: ' + J.action + '\nTheme: ' + J.theme + '\nContent: ' + J.content  + '\nServer: ' + J.server  + '\nModified: ' + J.modified.toString() );
-    return J;
-    1 - if ok, null if doesn't exist, ...list, ...0-error
-*/
+    if(http.responseText.charAt(0) == '0') { alert(http.responseText); return false; }
+    return http.responseText;
   } catch(e) { alert(e.message); return 'Error!'; }
 }
 
@@ -45,33 +38,29 @@ function Rename( ob ) {
   var xID = ob.getAttribute('ref');
   alert('id = ' + xID);
   
-  var J = {};
+  /*var J = {};
   J.collection = 'files';
   J.id = ob.getAttribute('ref');
   J.file = ob.value.trim();
-  J.action = 'rename';
-  Send( JSON.stringify(J) );
-
+  J.action = 'rename';*/
+  Send( { collection: 'files', id: ob.getAttribute('ref'), file: ob.value.trim(), action: 'rename' } );
   listIt();
 }
 
 function listIt() {
-  var J = {};
-  J.collection = 'files';
-  J.action = 'list';
-  buldTable( Send( JSON.stringify(J) ));
+  buldTable( Send( { collection: 'files', action: 'list' } ));
 }
 
 
 function id(x) { return document.getElementById(x); }
 function getAndSend( ob ) {
-  var J = {};
+  /*var J = {};
   J.collection = 'files';
   J.file = id('title').value.trim();
   J.theme = id('theme').value.trim();
   J.content = id('content').value.trim();
-  J.action = ob.options[ob.selectedIndex].text;
-  Send( JSON.stringify(J) );
+  J.action = ob.options[ob.selectedIndex].text;*/
+  Send( { collection: 'files', file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: ob.options[ob.selectedIndex].text } );
 }
 
 </script>
