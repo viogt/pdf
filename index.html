@@ -55,7 +55,7 @@ var Mgn = {
   buildTable: function( txt ) {
     var x = JSON.parse(txt), L = x.length, t = '<table>';
     for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="rClick(event,this)" onclick="getOne(this.innerHTML)">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
-    id(this.tblOut).innerHTML = t + '</table>';
+    id('out').innerHTML = t + '</table>';
   },
   
   getDF: function(x){
