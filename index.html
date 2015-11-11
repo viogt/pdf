@@ -60,7 +60,7 @@ var Mng = {
   
   buildTable: function( txt ) {
     var x = JSON.parse(txt), L = x.length, t = '<table>';
-    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.getOne(this.innerHTML)">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
+    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.getOne()">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
     id(this.tblOut).innerHTML = t + '</table>';
   },
   
@@ -72,7 +72,7 @@ var Mng = {
   Rename: function() {
     var fName = this.curElem.innerHTML;
     var res; if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
-    this.Send( { collection: this.xCollection, id: this.curElem.getAttribute("ref"), file: fName, action: 'rename' } );
+    this.Send( { collection: this.xCollection, id: this.curElem.getAttribute("ref"), file: res, action: 'rename' } );
     this.listIt();
   },
   
