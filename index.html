@@ -39,7 +39,7 @@
 
 var Mng = {
   
-  curElem: null, mnuCntx: 'mnu', xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out', 
+  xCollection: 'files', curElem: null, mnuCntx: 'mnu', xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out', 
   
   Send: function( jsonMsg ) {
     try {
@@ -65,18 +65,18 @@ var Mng = {
   
   Rename: function( fName, fId ) {
     var res; if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
-    this.Send( { collection: 'files', id: fId, file: res.trim(), action: 'rename' } );
+    this.Send( { collection: this.xCollection, id: fId, file: res.trim(), action: 'rename' } );
     this.listIt();
   },
   
   Delete: function( fName ) {
     if(!window.confirm("Delete " + fName + "?")) return;
-    this.Send( { collection: 'files', file: fName, action: 'remove' } );
+    this.Send( { collection: this.xCollection, file: fName, action: 'remove' } );
     this.listIt();
   },
   
   getOne: function( fName ) {
-    var r = this.Send( { collection: 'files', file: fName, action: 'get one' } );
+    var r = this.Send( { collection: this.xCollection, file: fName, action: 'get one' } );
     var j = JSON.parse(r);
     id(this.xTitle).value = j.file;
     id(this.xThems).value = j.theme;
@@ -84,15 +84,15 @@ var Mng = {
   },
   
   Download: function( fName ) {
-    this.Send( { collection: 'files', file: fName, action: 'download' } );
+    this.Send( { collection: this.xCollection, file: fName, action: 'download' } );
   },
   
   listIt: function() {
-    this.buildTable( this.Send( { collection: 'files', action: 'list' } ));
+    this.buildTable( this.Send( { collection: this.xCollection, action: 'list' } ));
   },
   
   Save: function() {
-    this.Send( { collection: 'files', file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: 'save' } );
+    this.Send( { collection: this.xCollection, file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: 'save' } );
     this.listIt();
   },
   
