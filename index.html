@@ -57,17 +57,15 @@ function getDF(x){
   return s[0] + ',&nbsp;' + s[2] + '&nbsp;' + s[1] + ',&nbsp;' + s[4];
 }
 
-function Rename( ob ) {
-  
-  var xID = ob.getAttribute('ref');
-  alert('id = ' + xID);
-  
-  Send( { collection: 'files', id: ob.getAttribute('ref'), file: ob.value.trim(), action: 'rename' } );
+function Rename( fName, fId ) {
+  var res; if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
+  Send( { collection: 'files', id: fId, file: res.trim(), action: 'rename' } );
   listIt();
 }
 
-function Delete(ob) {
-  Send( { collection: 'files', file: ob.value.trim(), action: 'remove' } );
+function Delete( fName ) {
+  if(!window.confirm("Delete " + fName + "?")) return;
+  Send( { collection: 'files', file: fName, action: 'remove' } );
   listIt();
 }
 
@@ -156,6 +154,7 @@ function getPosition(e) {
 
 <ul id='mnu' class='custom-menu'>
   <li onclick='alert(curElem.value)'>First thing</li>
+  <li onclick='Rename(curElem.value,curElem.getAttribute('ref'))'>Rename</li>
   <li onclick='Delete(curElem.value)'>Delete</li>
   <li>Third thing</li>
 </ul>
