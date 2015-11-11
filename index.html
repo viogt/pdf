@@ -76,9 +76,10 @@ function getAndSend( ob ) {
   listIt();
 }
 
+var curElem = null;
 function rClick( e, obj ) {
   e.preventDefault();
-  obj.style.backgroundColor = 'yellow';
+  (curElem = obj).style.backgroundColor = 'yellow';
   var m = id('mnu').style, pos = getPosition(e);
     m.top = pos.y + 'px';
     m.left = pos.x + 'px';
@@ -86,19 +87,16 @@ function rClick( e, obj ) {
       document.addEventListener('click', function(e) {
         id('mnu').style.display = 'none';
         document.removeEventListener("click");
-        obj.style.backgroundColor = 'yellow';
+        curElem.style.backgroundColor = 'yellow'; curElem = null;
       });
   return false;
 }
 
 function getPosition(e) {
-  var posx = 0, posy = 0; if (!e) var e = window.event;
-  if(e.pageX || e.pageY) { posx = e.pageX; posy = e.pageY; }
-  else if(e.clientX || e.clientY) {
-    posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-    posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-  }
-  return { x: posx, y: posy }
+  if(!e) e = window.event;
+  if(e.pageX || e.pageY) return({ x: e.pageX, y: e.pageY });
+  else if(e.clientX || e.clientY) return({ x: e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft, y: e.clientY + document.body.scrollTop + document.documentElement.scrollTop });
+  return { x:0, y:0 }
 }
 
 </script>
@@ -152,7 +150,7 @@ function getPosition(e) {
 <div id='out'></div>
 
 <ul id='mnu' class='custom-menu'>
-  <li data-action="first">First thing</li>
+  <li data-action="first" onclick='alert(curElem.value)'>First thing</li>
   <li data-action="second">Second thing</li>
   <li data-action="third">Third thing</li>
 </ul>
