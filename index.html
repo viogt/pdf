@@ -42,7 +42,7 @@ var Mng = {
   xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'out',
   contextMenu: [
     { text: 'Open', exe: 'Mng.getOne(Mng.curElem.innerHTML)' },
-    { text: 'Rename', exe: 'Mng.Rename(Mng.curElem.innerHTML,Mng.curElem.getAttribute("ref"))' },
+    { text: 'Rename', exe: this.Rename(this.curElem.innerHTML,this.curElem.getAttribute("ref")) },
     { text: 'Delete', exe: 'Mng.Delete(Mng.curElem.innerHTML)' },
     { text: 'Download', exe: 'Mng.Download(Mng.curElem.innerHTML)' },
     { text: 'Cancel', exe: null}],
