@@ -8,6 +8,30 @@
 <style>
   TEXTAREA { width:400px; height: 4em; background-color: lightyellow; }
   TD { vertical-align: top; }
+  
+  .custom-menu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid gray;
+    white-space: nowrap;
+    font: normal 12px Arial,Sans;
+    background: white;
+    color: #444;
+    border-radius: 5px;
+    padding: 12px;
+    box-shadow: 0px 2px 12px gray;
+  }
+  .custom-menu li {
+    padding: 4px;
+    cursor: pointer;
+    list-style-type: none;
+  }
+  .custom-menu li:hover {
+    color: white;
+    background-color: #555599;
+  }
 </style>
 <script type="text/javascript">
 
@@ -17,14 +41,14 @@ function Send( jsonMsg) {
     var http = new XMLHttpRequest();
     http.open('POST', '/', false);
     http.send(msg);
-    if(http.responseText.charAt(0) == '0') { alert(http.responseText); return false; }
+    if(http.responseText.charAt(0) == '0') { alert(http.responseText.substr(1)); return false; }
     return http.responseText;
   } catch(e) { alert(e.message); return 'Error!'; }
 }
 
-function buldTable( txt ) {
+function buildTable( txt ) {
   var x = JSON.parse(txt), L = x.length, t = '<table>';
-  for(var i=0; i<L; i++) t += '<TR><td><input type="text" onChange="Rename(this)" value="' + x[i].file + '" ref="'+ x[i]._id +'"></td><td>' + getDF(x[i].modified) + '</td><td></TR>';
+  for(var i=0; i<L; i++) t += '<TR><td><input type="text" onChange="Rename(this)" value="' + x[i].file + '" ref="'+ x[i]._id +'" oncontextmenu="rClick(event)"></td><td>' + getDF(x[i].modified) + '</td><td></TR>';
   id('out').innerHTML = t + '</table>';
 }
 
@@ -38,29 +62,41 @@ function Rename( ob ) {
   var xID = ob.getAttribute('ref');
   alert('id = ' + xID);
   
-  /*var J = {};
-  J.collection = 'files';
-  J.id = ob.getAttribute('ref');
-  J.file = ob.value.trim();
-  J.action = 'rename';*/
   Send( { collection: 'files', id: ob.getAttribute('ref'), file: ob.value.trim(), action: 'rename' } );
   listIt();
 }
 
 function listIt() {
-  buldTable( Send( { collection: 'files', action: 'list' } ));
+  buildTable( Send( { collection: 'files', action: 'list' } ));
 }
-
 
 function id(x) { return document.getElementById(x); }
 function getAndSend( ob ) {
-  /*var J = {};
-  J.collection = 'files';
-  J.file = id('title').value.trim();
-  J.theme = id('theme').value.trim();
-  J.content = id('content').value.trim();
-  J.action = ob.options[ob.selectedIndex].text;*/
   Send( { collection: 'files', file: id('title').value.trim(), theme: id('theme').value.trim(), content: id('content').value.trim(), action: ob.options[ob.selectedIndex].text } );
+  listIt();
+}
+
+function rClick(e) {
+  e.preventDefault();
+  var m = id('mnu').style, pos = getPosition(e);
+    m.top = pos.y + 'px';
+    m.left = pos.x + 'px';
+    m.display = 'block';
+      document.addEventListener('click', function(e) {
+        id('mnu').style.display = 'none';
+        document.removeEventListener("click");
+      });
+  return false;
+}
+
+function getPosition(e) {
+  var posx = 0, posy = 0; if (!e) var e = window.event;
+  if(e.pageX || e.pageY) { posx = e.pageX; posy = e.pageY; }
+  else if(e.clientX || e.clientY) {
+    posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+    posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+  }
+  return { x: posx, y: posy }
 }
 
 </script>
@@ -92,7 +128,8 @@ function getAndSend( ob ) {
     <td>Theme:</td>
     <td>
       <TEXTAREA id='theme'>
-      Primul. Un oarecare text.
+      body { font:normal 12pt Verdana; color:darkblue; }
+      i { color:blue; }
       </TEXTAREA>
     </td>
   </tr>
@@ -100,7 +137,10 @@ function getAndSend( ob ) {
     <td>Content:</td>
     <td>
       <TEXTAREA id='content'>
-      Al doilea. Un oarecare text.
+      Al doilea. Un <i>oarecare</i> text.<br>
+      Aici continua cu titlul.<br>
+      <h1>Vine titlul</h1>
+      Acum continuam fara titlu.
       </TEXTAREA>
     </td>
   </tr>
@@ -108,5 +148,12 @@ function getAndSend( ob ) {
 
 <input type='button' onclick='listIt()' value='List!'><br>
 <div id='out'></div>
+
+<ul id='mnu' class='custom-menu'>
+  <li data-action="first">First thing</li>
+  <li data-action="second">Second thing</li>
+  <li data-action="third">Third thing</li>
+</ul>
+
 </body>
 </html>
