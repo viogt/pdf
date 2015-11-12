@@ -77,10 +77,12 @@ var Mng = {
   
   Rename: function() {
     var res, fName = this.curElem.innerHTML;
-    if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
-    if(this.getOne(fName,true)) { alert('The file:\n' + fName + '\nalready exists!'); return; }
-    this.Send( { collection: this.xCollection, id: this.curElem.getAttribute("ref"), file: res, action: 'rename' } );
-    this.listIt();
+    while((res = window.prompt("Rename:", fName)) && res != fName) {
+      res = res.trim();
+      if(this.getOne(res,true)) { alert('The file:\n' + fName + '\nalready exists!'); continue; }
+      this.Send( { collection: this.xCollection, id: this.curElem.getAttribute("ref"), file: res, action: 'rename' } );
+      this.listIt(); return;
+    }
   },
   
   Delete: function() {
