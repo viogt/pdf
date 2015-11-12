@@ -199,11 +199,11 @@ function id(x) { return document.getElementById(x); }
 
 <input type='button' value='Open Files' onClick='Mng.openFiles()'>
 
-<div id='openFiles' style='border:1px solid gray; position:absolute; top:50px; left:100px; display:none; border-radius:5px; padding: 8px; box-shadow: 0px 2px 12px gray;'>
+<div id='openFiles' style='background-color:white; border:1px solid gray; position:absolute; top:50px; left:100px; display:none; border-radius:5px; padding: 8px; box-shadow: 0px 2px 12px gray;'>
   <div style='width:100%; text-align:right'><input type='button' value='X' onClick='this.parentElement.parentElement.style.display="none"'></div>
   <div id='outPutFiles' style='width:600px; height:200px; overflow:auto;'>
   </div>
-<input type='button' value='Close' onClick='this.parentElement.parentElement.style.display="none"'>
+  <input type='button' value='Close' onClick='this.parentElement.style.display="none"'>
 </div>
 </body>
 </html>
