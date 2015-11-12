@@ -39,7 +39,8 @@
 
 var Mng = {
   
-  xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'outPutFiles',
+  xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content',
+  tblOut: 'outPutFiles', lastSaved: '',
   contextMenu: [
     { text: 'Open', exe: function() { Mng.getOne( Mng.curElem.innerHTML, false);} },
     { text: 'Rename', exe: function() { Mng.Rename();} },
@@ -87,7 +88,6 @@ var Mng = {
   
   getOne: function( fName, ifExists ) {
     var r = this.Send( { collection: this.xCollection, file: fName, action: 'get one' } );
-alert(r);
     if(ifExists) return r!='null'?true:false;
     var j = JSON.parse(r);
     id(this.xTitle).value = j.file;
@@ -105,8 +105,11 @@ alert(r);
   },
   
   Save: function() {
-    this.Send( { collection: this.xCollection, file: id(this.xTitle).value.trim(), theme: id(this.xThems).value.trim(), content: id(this.xContent).value.trim(), action: 'save' } );
+    var s = id(this.xTitle).value.trim(); if(s=='') return;
+    if(s != this.lastSaved) { if(this.getOne(s,true) && !confirm('File ' + s + ' already exists.\nOverwrite?')) return; }
+    this.Send( { collection: this.xCollection, file: s, theme: id(this.xThems).value.trim(), content: id(this.xContent).value.trim(), action: 'save' } );
     this.listIt();
+    this.lastSaved = s;
   },
   
   rClick: function( e, obj ) {
