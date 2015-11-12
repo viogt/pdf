@@ -41,7 +41,7 @@ var Mng = {
   
   xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'outPutFiles',
   contextMenu: [
-    { text: 'Open', exe: function() { Mng.getOne(this.curElem.innerHTML, false);} },
+    { text: 'Open', exe: function() { Mng.getOne( Mng.curElem.innerHTML, false);} },
     { text: 'Rename', exe: function() { Mng.Rename();} },
     { text: 'Delete', exe: function() { Mng.Delete(); } },
     { text: 'Download', exe: function() { Mng.Download();} },
@@ -87,7 +87,8 @@ var Mng = {
   
   getOne: function( fName, ifExists ) {
     var r = this.Send( { collection: this.xCollection, file: fName, action: 'get one' } );
-    if(ifExists) return r?true:false;
+alert(r);
+    if(ifExists) return r!='null'?true:false;
     var j = JSON.parse(r);
     id(this.xTitle).value = j.file;
     id(this.xThems).value = j.theme;
