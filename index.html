@@ -32,7 +32,7 @@
     color: white;
     background-color: #555599;
   }
-  .Fdt { font:normal 10pt Helvetica,Arial; color: darkblue; }
+  .Fdt { font:normal 10pt Helvetica,Arial; color: darkblue; white-space: nowrap; width:400px; overflow: hidden; text-overflow: ellipsis; }
   .Fdt:hover { background-color: lightblue; cursor: pointer; }
 </style>
 <script type="text/javascript">
@@ -66,7 +66,7 @@ var Mng = {
   
   buildTable: function( txt ) {
     var x = JSON.parse(txt), L = x.length, t = '<table>';
-    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.showOne(this)">'+x[i].file+'</td><td class="Fdt">' + this.getDF(x[i].modified) + '</td><td></TR>';
+    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.showOne(this)">'+x[i].file+'</td><td>' + this.getDF(x[i].modified) + '</td><td></TR>';
     id(this.tblOut).innerHTML = t + '</table>';
   },
   
@@ -201,7 +201,7 @@ function id(x) { return document.getElementById(x); }
 
 <div id='openFiles' style='background-color:white; border:1px solid gray; position:absolute; top:50px; left:100px; display:none; border-radius:5px; padding: 8px; box-shadow: 0px 2px 12px gray;'>
   <div style='width:100%; text-align:right'><input type='button' value='X' onClick='this.parentElement.parentElement.style.display="none"'></div>
-  <div id='outPutFiles' style='width:600px; height:200px; overflow:auto;'>
+  <div id='outPutFiles' style='width:500px; height:200px; overflow:auto; font:normal 10pt Helvetica,Arial;'>
   </div>
   <input type='button' value='Close' onClick='this.parentElement.style.display="none"'>
 </div>
