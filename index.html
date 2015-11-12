@@ -32,7 +32,7 @@
     color: white;
     background-color: #555599;
   }
-  .Fdt { font:normal 10pt Helvetica,Arial; white-space: nowrap; max-width:360px; overflow: hidden; text-overflow: ellipsis; }
+  .Fdt { font:normal 10pt Helvetica,Arial; white-space: nowrap; max-width:340px; overflow: hidden; text-overflow: ellipsis; }
   .Fdt:hover { background-color: lightgray; cursor: pointer; }
 </style>
 <script type="text/javascript">
@@ -41,7 +41,7 @@ var Mng = {
   
   xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'outPutFiles',
   contextMenu: [
-    { text: 'Open', exe: function() { Mng.getOne();} },
+    { text: 'Open', exe: function() { Mng.getOne(this.curElem, false);} },
     { text: 'Rename', exe: function() { Mng.Rename();} },
     { text: 'Delete', exe: function() { Mng.Delete(); } },
     { text: 'Download', exe: function() { Mng.Download();} },
@@ -66,7 +66,7 @@ var Mng = {
   
   buildTable: function( txt ) {
     var x = JSON.parse(txt), L = x.length, t = '<table>';
-    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.showOne(this)">'+x[i].file+'</td><td>' + this.getDF(x[i].modified) + '</td><td></TR>';
+    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.getOne(this,false)">'+x[i].file+'</td><td>' + this.getDF(x[i].modified) + '</td><td></TR>';
     id(this.tblOut).innerHTML = t + '</table>';
   },
   
@@ -76,8 +76,9 @@ var Mng = {
   },
   
   Rename: function() {
-    var fName = this.curElem.innerHTML;
-    var res; if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
+    var res, fName = this.curElem.innerHTML;
+    if(!(res = window.prompt("Rename:", fName)) || res == fName) return;
+    if(this.getOne(fName,true)) { alert('The file:\n' + fName + '\nalready exists!'); return; }
     this.Send( { collection: this.xCollection, id: this.curElem.getAttribute("ref"), file: res, action: 'rename' } );
     this.listIt();
   },
@@ -88,12 +89,14 @@ var Mng = {
     this.listIt();
   },
   
-  getOne: function() {
-    var r = this.Send( { collection: this.xCollection, file: this.curElem.innerHTML, action: 'get one' } );
+  getOne: function( fName, ifExists ) {
+    var r = this.Send( { collection: this.xCollection, file: fName, action: 'get one' } );
+    if(ifExists) return r?true:false;
     var j = JSON.parse(r);
     id(this.xTitle).value = j.file;
     id(this.xThems).value = j.theme;
     id(this.xContent).value = j.content;
+    return true;
   },
   
   Download: function() {
