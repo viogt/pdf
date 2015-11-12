@@ -41,18 +41,12 @@ var Mng = {
   
   xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content', tblOut: 'outPutFiles',
   contextMenu: [
-    { text: 'Open', exe: function() { Mng.getOne(this.curElem, false);} },
+    { text: 'Open', exe: function() { Mng.getOne(this.curElem.innerHTML, false);} },
     { text: 'Rename', exe: function() { Mng.Rename();} },
     { text: 'Delete', exe: function() { Mng.Delete(); } },
     { text: 'Download', exe: function() { Mng.Download();} },
     { text: 'Cancel', exe: null}],
   
-  showOne: function( o ) {
-    if(!this.curElem) this.curElem = o;
-    this.getOne();
-    this.curElem = null;
-  },
-
   Send: function( jsonMsg ) {
     try {
       var msg = JSON.stringify( jsonMsg );
@@ -66,7 +60,7 @@ var Mng = {
   
   buildTable: function( txt ) {
     var x = JSON.parse(txt), L = x.length, t = '<table>';
-    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.getOne(this,false)">'+x[i].file+'</td><td>' + this.getDF(x[i].modified) + '</td><td></TR>';
+    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.getOne(this.innerHTML,false)">'+x[i].file+'</td><td>' + this.getDF(x[i].modified) + '</td><td></TR>';
     id(this.tblOut).innerHTML = t + '</table>';
   },
   
@@ -79,7 +73,7 @@ var Mng = {
     var res, fName = this.curElem.innerHTML;
     while((res = window.prompt("Rename:", fName)) && res != fName) {
       res = res.trim();
-      if(this.getOne(res,true)) { alert('The file:\n' + fName + '\nalready exists!'); continue; }
+      if(this.getOne(res,true)) { alert('The file:\n' + res + '\nalready exists!'); continue; }
       this.Send( { collection: this.xCollection, id: this.curElem.getAttribute("ref"), file: res, action: 'rename' } );
       this.listIt(); return;
     }
