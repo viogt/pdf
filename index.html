@@ -37,12 +37,13 @@
 </style>
 <script type="text/javascript">
 
-  function Send( jsonMsg, getOrPost ) {
+  function Send( jsonMsg ) {
     try {
-      var msg = JSON.stringify( jsonMsg );
-      var url = '/';
-      if(getOrPost == 'GET') url += encodeURI(msg);
+      var getLim = 2000, getOrPost = 'POST', url = '/', msg = JSON.stringify( jsonMsg );
+      if(msg.length < getLim) { url += encodeURI(msg); if(url.length > getLim) url='/'; else { getOrPost = 'GET'; msg=''; }}
+
       alert(getOrPost + '\n\n' + msg);
+
       var http = new XMLHttpRequest();
       http.open(getOrPost, url, false);
       http.send(msg);

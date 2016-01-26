@@ -32,7 +32,7 @@ http.createServer(function (req, res) {
     req.on('end', function () {
         try {
             var J = JSON.parse(body);
-            res.end('POST RETURN: ' + JSON.stringify(J));
+            res.end('POST RETURN: ' + x.action + ' --- ' + JSON.stringify(J));
         } catch(e) { }
     });
   
