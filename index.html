@@ -40,9 +40,11 @@
   function Send( jsonMsg, getOrPost ) {
     try {
       var msg = JSON.stringify( jsonMsg );
+      var url = '/';
+      if(getOrPost == 'GET') url += msg;
       alert(getOrPost + '\n\n' + msg);
       var http = new XMLHttpRequest();
-      http.open(getOrPost, '/new', false);
+      http.open(getOrPost, url, false);
       http.send(msg);
       alert(http.responseText);
     } catch(e) { alert(e.message); return 'Error!'; }
