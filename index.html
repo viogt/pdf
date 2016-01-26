@@ -42,7 +42,7 @@
       var msg = JSON.stringify( jsonMsg );
       alert(getOrPost + '\n\n' + msg);
       var http = new XMLHttpRequest();
-      http.open(getOrPost, '/', false);
+      http.open(getOrPost, '/new', false);
       http.send(msg);
       alert(http.responseText);
     } catch(e) { alert(e.message); return 'Error!'; }
