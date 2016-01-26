@@ -37,176 +37,31 @@
 </style>
 <script type="text/javascript">
 
-var Mng = {
-  
-  xCollection: 'files', curElem: null, cntxMenu: null, xTitle: 'title', xThems: 'theme', xContent: 'content',
-  tblOut: 'outPutFiles', lastSaved: '',
-  contextMenu: [
-    { text: 'Open', exe: function() { Mng.getOne( Mng.curElem.innerHTML, false);} },
-    { text: 'Rename', exe: function() { Mng.Rename();} },
-    { text: 'Delete', exe: function() { Mng.Delete(); } },
-    { text: 'Download', exe: function() { Mng.Download();} },
-    { text: 'Cancel', exe: null}],
-  
-  Send: function( jsonMsg ) {
+  function Send( jsonMsg, getOrPost ) {
     try {
       var msg = JSON.stringify( jsonMsg );
+      alert(getOrPost + '\n\n' + msg);
       var http = new XMLHttpRequest();
-      http.open('POST', '/', false);
+      http.open(getOrPost, '/', false);
       http.send(msg);
-      if(http.responseText.charAt(0) == '0') { alert(http.responseText.substr(1)); return false; }
-      return http.responseText;
+      alert(http.responseText);
     } catch(e) { alert(e.message); return 'Error!'; }
-  },
-  
-  buildTable: function( txt ) {
-    var x = JSON.parse(txt), L = x.length, t = '<table>';
-    for(var i=0; i<L; i++) t += '<TR><td class="Fdt" ref="'+ x[i]._id +'" oncontextmenu="Mng.rClick(event,this)" onclick="Mng.getOne(this.innerHTML,false)">'+x[i].file+'</td><td>' + this.getDF(x[i].modified) + '</td><td></TR>';
-    id(this.tblOut).innerHTML = t + '</table>';
-  },
-  
-  getDF: function(x){
-    var s = (new Date(x)).toString().split(' ');
-    return s[0] + ',&nbsp;' + s[2] + '&nbsp;' + s[1] + ',&nbsp;' + s[4];
-  },
-  
-  Rename: function() {
-    var res, fName = this.curElem.innerHTML;
-    while((res = window.prompt("Rename:", fName)) && res != fName) {
-      res = res.trim();
-      if(this.getOne(res,true)) { alert('The file:\n' + res + '\nalready exists!'); continue; }
-      this.Send( { collection: this.xCollection, id: this.curElem.getAttribute("ref"), file: res, action: 'rename' } );
-      this.listIt(); return;
-    }
-  },
-  
-  Delete: function() {
-    if(!window.confirm("Delete " + this.curElem.innerHTML + "?")) return;
-    this.Send( { collection: this.xCollection, file: this.curElem.innerHTML, action: 'remove' } );
-    this.listIt();
-  },
-  
-  getOne: function( fName, ifExists ) {
-    var r = this.Send( { collection: this.xCollection, file: fName, action: 'get one' } );
-    if(ifExists) return r!='null'?true:false;
-    var j = JSON.parse(r);
-    id(this.xTitle).value = j.file;
-    id(this.xThems).value = j.theme;
-    id(this.xContent).value = j.content;
-    return true;
-  },
-  
-  Download: function() {
-    this.Send( { collection: this.xCollection, file: this.curElem.innerHTML, action: 'download' } );
-  },
-  
-  listIt: function() {
-    this.buildTable( this.Send( { collection: this.xCollection, action: 'list' } ));
-  },
-  
-  Save: function() {
-    var s = id(this.xTitle).value.trim(); if(s=='') return;
-    if(s != this.lastSaved) { if(this.getOne(s,true) && !confirm('File ' + s + ' already exists.\nOverwrite?')) return; }
-    this.Send( { collection: this.xCollection, file: s, theme: id(this.xThems).value.trim(), content: id(this.xContent).value.trim(), action: 'save' } );
-    this.listIt();
-    this.lastSaved = s;
-  },
-  
-  rClick: function( e, obj ) {
-    e.preventDefault();
-    if(this.curElem) this.curElem.style.backgroundColor = '';
-    (this.curElem = obj).style.backgroundColor = 'yellow';
-    if(this.cntxMenu == null) this.createCntx();
-    var m = this.cntxMenu.style, pos = this.getPosition(e);
-      m.top = pos.y + 'px';
-      m.left = pos.x + 'px';
-      m.display = 'block';
-        document.addEventListener('click', function(e) {
-          Mng.cntxMenu.style.display = 'none';
-          document.removeEventListener("click");
-          Mng.curElem.style.backgroundColor = ''; Mng.curElem = null;
-        });
-    return false;
-  },
-
-  getPosition: function(e) {
-    if(!e) e = window.event;
-    if(e.pageX || e.pageY) return({ x: e.pageX, y: e.pageY });
-    else if(e.clientX || e.clientY) return({ x: e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft, y: e.clientY + document.body.scrollTop + document.documentElement.scrollTop });
-    return { x:0, y:0 };
-  },
-  
-  createCntx: function() {
-    var u = document.createElement('ul');
-    u.className = 'custom-menu';
-    u.id = 'mnu';
-    for (var i=0, C=this.contextMenu, L=C.length; i<L; i++) {
-      var li = document.createElement('li');
-      u.appendChild(li);
-      li.innerHTML = C[i].text;
-      li.addEventListener('click', C[i].exe);
-    }
-    document.body.appendChild(u);
-    this.cntxMenu = u;
-  },
-  
-  openFiles: function() {
-    id('openFiles').style.display = 'block';
-    this.listIt();
   }
-}
 
 function id(x) { return document.getElementById(x); }
-
+function save() {
+  var gP = id('isGet').checked?'GET':'POST';
+  var j = { name: 'Viorel', action: id('act').value.trim(), text: 'A message about all this stuff' };
+  Send(j, gP);
+}
 
 </script>
 </head>
 <body>
 
-<table>
-  <tr>
-    <td>Action:</td>
-    <td>
-      <input type='button' value='Save' onClick='Mng.Save()'>
-    </td>
-  </tr>
-  <tr>
-    <td>File:</td>
-    <td>
-      <TEXTAREA id='title'>
-      A new PDF file/title.
-      </TEXTAREA>
-    </td>
-  </tr>
-  <tr>
-    <td>Theme:</td>
-    <td>
-      <TEXTAREA id='theme'>
-      body { font:normal 12pt Verdana; color:darkblue; }
-      i { color:blue; }
-      </TEXTAREA>
-    </td>
-  </tr>
-  <tr>
-    <td>Content:</td>
-    <td>
-      <TEXTAREA id='content'>
-      Al doilea. Un <i>oarecare</i> text.<br>
-      Aici continua cu titlul.<br>
-      <h1>Vine titlul</h1>
-      Acum continuam fara titlu.
-      </TEXTAREA>
-    </td>
-  </tr>
-</table>
+<input type='button' value='Show' onClick='save()'>
+<input id='act' type='text' value='action'>
+<input id='isGet' type="radio" name="g" checked> Get<br><input type="radio" name="g"> Post<br>
 
-<input type='button' value='Open Files' onClick='Mng.openFiles()'>
-
-<div id='openFiles' style='background-color:white; border:1px solid gray; position:absolute; top:50px; left:100px; display:none; border-radius:5px; padding: 8px; box-shadow: 0px 2px 12px gray;'>
-  <div style='width:100%; text-align:right'><input type='button' value='X' onClick='this.parentElement.parentElement.style.display="none"'></div>
-  <div id='outPutFiles' style='width:500px; height:200px; overflow:auto; font:normal 10pt Helvetica,Arial;'>
-  </div>
-  <input type='button' value='Close' onClick='this.parentElement.style.display="none"'>
-</div>
 </body>
 </html>
