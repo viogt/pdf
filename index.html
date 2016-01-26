@@ -41,7 +41,7 @@
     try {
       var msg = JSON.stringify( jsonMsg );
       var url = '/';
-      if(getOrPost == 'GET') url += msg;
+      if(getOrPost == 'GET') url += encodeURI(msg);
       alert(getOrPost + '\n\n' + msg);
       var http = new XMLHttpRequest();
       http.open(getOrPost, url, false);
