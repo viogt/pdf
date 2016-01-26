@@ -18,7 +18,12 @@ http.createServer(function (req, res) {
   if(req.method == 'GET') {
     
     if(req.url == '/') returnFile('./index.html', res);
-    else res.end('GET RETURN: ' + decodeURI(req.url));
+    else {
+        try {
+            var x = JSON.parse(decodeURI(req.url.substr(1)));
+            res.end('GET Action: ' + x.action + ' --- ' + JSON.stringify(x));
+        } catch(e) { }
+    }
     return;
 
   }
