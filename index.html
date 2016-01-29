@@ -42,7 +42,7 @@
       var getLim = 2000, getOrPost = 'POST', url = '/', msg = JSON.stringify( jsonMsg );
       if(msg.length < getLim) { url += encodeURI(msg); if(url.length > getLim) url='/'; else { getOrPost = 'GET'; msg=''; }}
 
-      alert(getOrPost + '\n\n' + msg);
+      alert(getOrPost + '\n\n' + url);
 
       var http = new XMLHttpRequest();
       http.open(getOrPost, url, false);
@@ -53,9 +53,8 @@
 
 function id(x) { return document.getElementById(x); }
 function save() {
-  var gP = id('isGet').checked?'GET':'POST';
   var j = { name: 'Viorel', action: id('act').value.trim(), text: 'A message about all this stuff' };
-  Send(j, gP);
+  Send(j);
 }
 
 </script>
@@ -64,7 +63,6 @@ function save() {
 
 <input type='button' value='Show' onClick='save()'>
 <input id='act' type='text' value='action'>
-<input id='isGet' type="radio" name="g" checked> Get<br><input type="radio" name="g"> Post<br>
 
 </body>
 </html>

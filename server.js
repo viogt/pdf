@@ -21,7 +21,14 @@ http.createServer(function (req, res) {
     else {
         try {
             var x = JSON.parse(decodeURI(req.url.substr(1)));
-            res.end('GET Action: ' + x.action + ' --- ' + JSON.stringify(x));
+            //res.end('GET Action: ' + x.action + ' --- ' + JSON.stringify(x));
+            
+            var p = './';
+            fs.readdir(p, function (err, files){
+                if (err) { res.end('Error while reading the directory'); return; }
+                res.end( JSON.stringify(files) );
+            }); 
+            
         } catch(e) { }
     }
     return;
