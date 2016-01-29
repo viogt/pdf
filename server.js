@@ -1,4 +1,4 @@
-var http  = require('http'),
+var https  = require('https'),
     fs    = require('fs'),
     Mng   = require('mongodb'),
     MngIp = 'mongodb://127.0.0.1:27017/test',
@@ -13,7 +13,7 @@ MngIp = 'mongodb://'+process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
 var ipaddress = process.env.OPENSHIFT_NODEJS_IP;
 var port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
-http.createServer(function (req, res) {
+https.createServer(function (req, res) {
 
   if(req.method == 'GET') {
     
@@ -21,14 +21,7 @@ http.createServer(function (req, res) {
     else {
         try {
             var x = JSON.parse(decodeURI(req.url.substr(1)));
-            //res.end('GET Action: ' + x.action + ' --- ' + JSON.stringify(x));
-            
-            var p = './';
-            fs.readdir(p, function (err, files){
-                if (err) { res.end('Error while reading the directory'); return; }
-                res.end( JSON.stringify(files) );
-            }); 
-            
+            res.end('GET Action: ' + x.action + ' --- ' + JSON.stringify(x));
         } catch(e) { }
     }
     return;
