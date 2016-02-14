@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <title>S.E.A.D.</title>
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel&subset=latin-ext">
 <link rel="shortcut icon" type="image/x-icon" href="res/favicon.ico" />
 <style type="text/css">
 body { background-image: url("res/iceberg.jpg"); background-repeat:no-repeat; }
@@ -113,9 +113,6 @@ var curTable=0, tables = [
     	sub: true
     }
 ];
-
-var scrW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-var scrH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 var pathTo = "1yLqajaJ1U0QO_olHvNUjnVYP2cw8bechouCKWCobd8Q";
 
@@ -236,6 +233,9 @@ function trageTot() {
 }
 
 function layOut() {
+	var scrW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	var scrH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
 	var s = id('tableName').style; s.top = '64px'; s.left = '190px';
 	var dlt = 26;
 	s = id('out').style; s.top = '100px'; s.left = '180px'; s.width = (scrW - 180 - dlt) + 'px'; s.height = (scrH - 100 - dlt) + 'px';
