@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>S.E.A.D.</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+<style type="text/css">
+.TblAlt { font:normal 11pt Calibri,Arial; color:#555599; table-layout: fixed; border-collapse:collapse; white-space: nowrap; }
+.TblAlt tr:nth-of-type(odd) { background-color: #ffffff; }
+.TblAlt tr:nth-of-type(even) { background-color: #eeeeff; }
+.TblAlt tr td { border-bottom: 1 solid #ccccee; cursor:hand; padding: 2px; }
+.TblAlt tbody tr:hover { background-color: #ffff66; }
+.TblAlt tr th {
+	white-space: nowrap;
+	padding:4px; font:bold 1em Calibri,Arial;
+	border:1px solid #bbbbee;
+	background-image: -ms-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
+	background-image: -moz-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
+	background-image: -o-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
+	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #eeeef8), color-stop(1, #d0c0ff));
+	background-image: -webkit-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
+	background-image: linear-gradient(top,#eeeef8 0%, #d0c0ff 100%);
+	text-shadow: 0px 1px 0px #FFFFFF; filter: dropshadow(color=#FFFFFF, offx=0, offy=1);
+}
+.txtVertical {
+    white-space: nowrap;
+    width: 50px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+	/*-webkit-transform: rotate(270deg);
+	transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    */
+}
+.repDetails { text-decoration: none; font: italic 10pt Arial; color: blue; }
+.repDetails:hover { text-decoration: underline; }
+
+.PanTbl { font:normal 11pt Calibri,Arial; color:#555599; }
+.PanTbl tr td { border-bottom: 1px solid #bbbbee; cursor:hand; padding: 4px; }
+.PanTbl tr td:hover { background-color: #ffff66; cursor:hand; }
+
+.CellTrue {
+background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEFSURBVHjaYvz//z8DJYCJgULAAiKSt3kSqx7ZuYxzvbZDDCBWc7FDJgMTIxPD6983GRYc2QMyjJEFl+nommMsbRhufN3M8PLXFaiQAMILIAURZiYM4uy6DP///2WYdGTRfyRDwHKvvl9jeP7zIpKZqAYwnHu3EExLcRgxhBjrMKw5ewXsIhD7xbfLDM9+nINrvXVHG+5KuAG//nwB0w++HGL4/fcbQ4iRAZj//NsFhqffz8A1P3hgjuJFmAGMQIn/0jL7IYo+HwJjdPD0iSNG+CCnA0aQgj9/f2LF2DRjS0iML597YNgMFWMkNiWiGIJPM0ogYjHkP440gapwwDMTxQYABBgA7FR0649a9E0AAAAASUVORK5CYII=');
+background-repeat:no-repeat; background-position:center center; min-width:20px; }
+.CellFalse {
+background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAD2SURBVHjaxFM7DoMwDH2pOESHHgDPcB223gKpAxK34EAMMIe1FCQOgFQxuflARVBSVepQS5Ht2PHn2RHMjF/ohB8p2gSZpprtyxEHX8dGTeMG0A5UlsD5rCSGvF55F4SpqpSm1GmCzPO3LXJy1LXllwvodoMsCpNVy2hbYBjCLRiaZ8u7Dng+QXlu9b4H7ncvBmKbwoYBWR4kaXv3YmAMyoEpjv2PdWUHcP1j1ECqFpyj777YA6Yss9KyuEeDaW0cCsCUJMDjYUE8kr5TNuOzC+JiMI5uz2rmJvNWvidwcJXXx8IAuwb6uMqrY2iVgzbx99/4EmAAarFu0IJle5oAAAAASUVORK5CYII=');
+background-repeat:no-repeat; background-position:center center; min-width:20px; }
+.ConfigPanel {
+	background-color:#ddddf0; color:#444488; margin: 4px;
+	padding:10px; font:normal 11pt Calibri,Arial;border:1px solid #bbbbee;
+	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
+	/* background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAH0lEQVQImWM8c+YMAwwwMSABKMfY2BjBOXv2LAMDAwCPUQVs8zG7KQAAAABJRU5ErkJggg==');
+	text-shadow: 0px 1px 0px #FFFFFF; filter: dropshadow(color=#FFFFFF, offx=0, offy=1); */
+}
+.checkOn {
+	background-color:#ffffff; cursor:hand; outline: none;
+	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
+	background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEFSURBVHjaYvz//z8DJYCJgULAAiKSt3kSqx7ZuYxzvbZDDCBWc7FDJgMTIxPD6983GRYc2QMyjJEFl+nommMsbRhufN3M8PLXFaiQAMILIAURZiYM4uy6DP///2WYdGTRfyRDwHKvvl9jeP7zIpKZqAYwnHu3EExLcRgxhBjrMKw5ewXsIhD7xbfLDM9+nINrvXVHG+5KuAG//nwB0w++HGL4/fcbQ4iRAZj//NsFhqffz8A1P3hgjuJFmAGMQIn/0jL7IYo+HwJjdPD0iSNG+CCnA0aQgj9/f2LF2DRjS0iML597YNgMFWMkNiWiGIJPM0ogYjHkP440gapwwDMTxQYABBgA7FR0649a9E0AAAAASUVORK5CYII=');
+	background-repeat:no-repeat; background-position:center center; min-width:20px; min-height:20px; border:1px solid #bbbbee;
+}
+.checkOff {
+	outline: none; cursor:hand; background-color:#ffffff; min-width:20px; min-height:20px; border:1px solid #bbbbee;
+	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
+}
+.checkOff:hover { background-color:#ffff66; }
+.inpTab {
+	cursor: hand; outline: none; width:160px;
+	padding:4px; font:bold 12pt Calibri,Arial; color:#555599;
+	border:1px solid #bbbbee; border-radius:4px;
+	background-image: -ms-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
+	background-image: -moz-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
+	background-image: -o-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
+	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #eeeef8), color-stop(1, #d0c0ff));
+	background-image: -webkit-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
+	background-image: linear-gradient(top,#eeeef8 0%, #d0c0ff 100%);
+	-moz-border-radius:4px; -webkit-border-radius:4px;
+	text-shadow: 0px 1px 0px #FFFFFF; filter: dropshadow(color=#FFFFFF, offx=0, offy=1);
+}
+.inpTab:hover { border-color:#88c; /*box-shadow: 0px 1px 6px #66a;*/ }
+
+</style>
+
+<script type="text/javascript">
+    
+function id(x) { return document.getElementById(x); }
+
+var curTable=0, tables = [
+	{
+    	name: "Ancheta organica", // 0
+    	gid: 52145521,
+    	data: null,
+    	sub: false
+    },
+    {
+    	name: "Ancheta specifica", // 1
+    	gid: 2017715786,
+    	data: null,
+    	sub: false
+    },
+    {
+    	name: "Factori ancheta specifica", // 2
+    	gid: 330986171,
+    	data: null,
+    	sub: false
+    },
+    {
+    	name: "Siptoame organice", // 3
+    	gid: 1405035266,
+    	data: null,
+    	sub: false
+    },
+    {
+    	name: "Siptoame specifice", // 4
+    	gid: 198847004,
+    	data: null,
+    	sub: false
+    },
+    
+    {
+    	name: "Sindroame organice", // 5
+    	gid: 757940284,
+    	data: null,
+    	sub: true
+    },
+    {
+    	name: "Tipuri de personalitati organice", // 6
+    	gid: 1310870941,
+    	data: null,
+    	sub: true
+    },
+    {
+    	name: "Tulburari specifice de personalitate", // 7
+    	gid: 1082497651,
+    	data: null,
+    	sub: true
+    },
+    {
+    	name: "Siptoame specifice", // 8
+    	gid: 198847004,
+    	data: null,
+    	sub: false
+    }
+
+];
+
+var scrW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var scrH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+var pathTo = "1yLqajaJ1U0QO_olHvNUjnVYP2cw8bechouCKWCobd8Q";
+
+function getDrive( cfr ) {
+try {
+	var xh = new XMLHttpRequest();
+	xh.addr = cfr;
+		xh.onreadystatechange = function(){
+			if(xh.readyState==4)
+				if(xh.status==200) {
+					var cnt = xh.responseText;
+					var x = 'google.visualization.Query.setResponse(';
+					var st = cnt.indexOf(x) + x.length;
+					var s = JSON.parse( cnt.substr( st, cnt.length - st - 2) ).table;
+
+					var Rows = [], hd = [];
+					for(var i=0, C=s.cols, L=C.length; i<L; i++) hd.push( C[i].label );
+					Rows.push( hd );
+//alert(tables[xh.addr].name + '\n' + JSON.stringify(hd));
+					for(var i=0, R=s.rows, L=R.length; i<L; i++) {
+						var clls = [];
+						for(var j=0, C=R[i].c, LL=C.length; j<LL; j++) clls.push( C[j].v );
+						Rows.push( clls );
+					}
+					tables[xh.addr].data = Rows;
+					if(xh.addr == 0) orgPanel();
+					//{ id('tableName').innerText = tables[curTable=0].name; craftTable(Rows, true); }
+				}
+				else {  alert("Problem retrieving XML data (readyState/status): " + xh.readyState + '/'+ xh.status); }
+		};
+	xh.open("GET","https://spreadsheets.google.com/tq?tq=&key=" + pathTo + '&pub=1&gid=' + tables[cfr].gid, true);
+	xh.send();
+} catch(e) { alert(e.message); }
+}
+
+function craftTable(s, tblAcrive) {
+	
+	var t = document.createElement('TABLE'), h = document.createElement('THEAD'), b = document.createElement('TBODY');
+		t.className = 'TblAlt';
+
+		var r = document.createElement('TR');
+		for(var i=0, C=s[0], L=C.length; i<L; i++) {
+			var c = document.createElement('TH'); c.innerText = C[i]; r.appendChild(c);
+		}
+		if(tblAcrive) {
+			if(curTable==0) { var c = document.createElement('TH'); c.innerText = 'Answer'; r.appendChild(c); }
+			else if(curTable==1) {
+			try {
+				for(var j=1, LL=tables[2].data.length; j<LL; j++) {
+					var txtn = document.createElement('DIV'); txtn.innerText = tables[2].data[j][0]; txtn.className = 'txtVertical';
+					//if(vertAlCh.length<1) vertAl(); 
+					var c = document.createElement('TH'); c.appendChild(txtn); r.appendChild(c);
+				}
+			} catch(e) { alert(e.message); }
+			}
+		}
+		h.appendChild(r); t.appendChild(h);
+
+		for(var i=1, L=s.length; i<L; i++) {
+			var r = document.createElement('TR');
+			
+			if(tables[curTable].sub && s[i][0]==0) r.style.backgroundColor = '#bbbbee';
+			
+			for(var y=0, C=s[i], LL=C.length; y<LL; y++) {
+				var v = (C[y] === true)?'✔':(C[y] === false?' ':C[y]);
+				var c = document.createElement('TD'); c.innerText = v; r.appendChild(c);
+			}
+			
+			if(tblAcrive) {
+				if(curTable==0) {
+					var u = document.createElement('INPUT'); u.type = 'button'; u.className = 'checkOff'; u.addEventListener("click", orgCheck);
+					var c = document.createElement('TD');  c.appendChild(u); r.appendChild(c);
+				}
+				else if(curTable==1) {
+					for(var j=1, LL=tables[2].data.length; j<LL; j++) {
+					var u = document.createElement('INPUT'); u.type = 'button'; u.className = (j==3)?'checkOn':'checkOff';
+					u.addEventListener("click", speCheck); u.name = 'x'+s[i][0]; u.title = tables[2].data[j][0];
+					var c = document.createElement('TD');  c.appendChild(u); r.appendChild(c);
+					}
+				}
+			}
+			b.appendChild(r);
+		}
+		t.appendChild(b);
+		r = id('out'); if(r.hasChildNodes()) r.removeChild( r.firstChild ); r.appendChild(t);
+}
+
+function orgCheck() { var ob = document.activeElement; ob.className = (ob.className == 'checkOn')?'checkOff':'checkOn'; }
+function speCheck(){
+	var ob = document.activeElement, x = document.getElementsByName(ob.getAttribute('name'));
+	for(var i=0,L=x.length;i<L;i++) x[i].className = (x[i]===ob?'checkOn':'checkOff');
+}
+
+var vertAlCh = [];
+function vertAl() {
+	var t = tables[2].data;
+	for(var i=1; i<t.length; i++) {
+		var u = t[i][0], c = u.charAt(0); for(var j=1, L = u.length; j<L; j++) c += '\n' + u.charAt(j);
+		vertAlCh.push(c);
+	}
+}
+function sendToEdit(){
+	alert("You'll need authorizations (rights)\nto insert and edit data.");
+	window.open("https://docs.google.com/spreadsheet/ccc?key=1yLqajaJ1U0QO_olHvNUjnVYP2cw8bechouCKWCobd8Q&usp=sharing");
+}
+function toggleSet(){
+	var x = id('Setari').style;
+	x.display = x.display=='none'?'':'none';
+}
+function getData(x, act){
+	id('tableName').innerText = tables[curTable=x].name;
+	if(tables[x].data == null) { alert(tables[x].name + ' is NULL!'); getDrive(x); }
+	//alert(JSON.stringify(tables[x].data));
+	craftTable(tables[x].data, act);
+}
+function trageTot() {
+	for(var i=0, L=tables.length; i<L; i++) getDrive(i);
+}
+
+function layOut() {
+	var s = id('tableName').style; s.top = '70px'; s.left = '190px';
+	var dlt = 26;
+	s = id('out').style; s.top = '100px'; s.left = '180px'; s.width = (scrW - 180 - dlt) + 'px'; s.height = (scrH - 100 - dlt) + 'px';
+	s = id('leftPanel').style; s.top = '100px'; s.left = '9px'; s.width = '150px';
+}
+
+function toLeftPanel() {
+	var b = '<TABLE class="PanTbl">';
+	for(var i=0, L=tables.length; i<L; i++) {
+		b += '<TR><TD onclick="getData(' + i + ',false)">' + tables[i].name + '</TD</TR>';
+	}
+	b += '<TR><TD onclick="sendToEdit()">*Edit entities</TD</TR>';
+	id('leftPanel').innerHTML = b + '</TABLE>';
+}
+
+function orgPanel() {
+	var b = '<TABLE class="PanTbl">';
+		b += '<TR><TD onclick="orgEvalSind(0)"><b>Evaluare Sindroame probabile</b></TD</TR>';
+		b += '<TR><TD onclick="toggleDetails(-1)">*Detalii evaluare Sindroame probabile</TD</TR>';
+		b += '<TR><TD onclick="orgEvalSind(1)"><b>Evaluare Tipuri probabile</b></TD</TR>';
+		b += '<TR><TD onclick="toggleDetails(-2)">*Detalii evaluare Tipuri probabile</TD</TR>';
+		b += '<TR><TD onclick="orgRand()">Random sample data</TD</TR>';
+		b += '<TR><TD onclick="resetOrg()">Reset initial data</TD</TR>';
+	id('leftPanel').innerHTML = b + '</TABLE>';
+	getData(0, true);
+}
+
+function spePanel() {
+	var b = '<TABLE class="PanTbl">';
+		b += '<TR><TD onclick="orgEvalSind(2)"><b>Evaluare Tulburari probabile</b></TD</TR>';
+		b += '<TR><TD onclick="toggleDetails(-3)">*Detalii evaluare Tulburari probabile</TD</TR>';
+		b += '<TR><TD onclick="speRand()">Random sample data</TD</TR>';
+		b += '<TR><TD onclick="resetSpe()">Reset initial data</TD</TR>';
+	id('leftPanel').innerHTML = b + '</TABLE>';
+	getData(1, true);
+}
+
+function resetOrg() {
+	if(curTable!=0) return; var rs = id('out').firstChild.rows, L = rs.length;
+	for(var i=1; i<L; i++) rs[i].cells[2].firstChild.className = 'checkOff';
+}
+function orgRand() {
+	if(curTable!=0) return; var rs = id('out').firstChild.rows, L = rs.length;
+	for(var i=1; i<L; i++) rs[i].cells[2].firstChild.className = (Math.random()<.5)?'checkOff':'checkOn';
+}
+function speRand() {
+	if(curTable!=1) return; var rs = id('out').firstChild.rows, L = rs.length, rBase = tables[2].data.length-1;
+	for(var i=1; i<L; i++) {
+		var ac = Math.floor(Math.random()*rBase);
+		for(var j=0; j<rBase; j++) rs[i].cells[2+j].firstChild.className = (j!=ac)?'checkOff':'checkOn';
+	}
+}
+function resetSpe() {
+	if(curTable!=1) return; var rs = id('out').firstChild.rows, L = rs.length, rBase = tables[2].data.length-1;
+	for(var i=1; i<L; i++) for(var j=0; j<rBase; j++) rs[i].cells[2+j].firstChild.className = (j!=2)?'checkOff':'checkOn';
+}
+
+function getRateSpec(rw) {
+	var q = tables[2].data, L = q.length-1;
+	for(var j=0; j<L; j++) if(rw.cells[j+2].firstChild.className == 'checkOn') return q[j+1][1];
+}
+
+function orgEvalSind(indx) {
+	if(indx<2 && curTable!=0) return; if(indx==2 && curTable!=1) return;
+	var S1, Simp, titlu, mTitlu;
+	if(indx == 0) { curTable = -1; S1 = 5; Simp = 3; titlu = 'Sindrom'; mTitlu = '✎ Raport: evaluarea Sindroame probabile'; }
+	else if(indx == 1) { curTable = -2; S1 = 6; Simp = 3; titlu = 'Tipuri'; mTitlu = '✎ Raport: evaluarea Tipuri probabile'; }
+	else { curTable = -3; S1 = 7; Simp = 4; titlu = 'Tulburari'; mTitlu = '✎ Raport: evaluarea Tulburari probabile'; }
+
+try {
+
+	var rs = id('out').firstChild.rows, L = rs.length, GrandTotal = [];
+	var sindOrg = tables[S1].data, simptOrg = tables[Simp].data, res = [['Cod',titlu,'Pondere','Obl','Eval']], anchOrg = [[0,0]];
+	
+	for(var i=1; i<L; i++) {
+		var ln = [];
+		ln.push(rs[i].cells[0].innerText);
+			if(indx < 2) ln.push( rs[i].cells[2].firstChild.className == 'checkOn'?1:0 );
+			else ln.push( getRateSpec(rs[i]) );
+		anchOrg.push(ln);
+	}
+	for(var i=1, L=sindOrg.length; i<L; i++) {
+		var ln = [];
+		if(sindOrg[i][0] == 0) { ln.push(0); ln.push(sindOrg[i][1]); ln.push(0); ln.push(0); }
+		else {
+			ln.push(sindOrg[i][0]); ln.push( getFrom(simptOrg, sindOrg[i][0]) );
+			ln.push(sindOrg[i][2]); ln.push(sindOrg[i][3]); ln.push( sindOrg[i][2] * getFrom( anchOrg, sindOrg[i][0]));
+		}
+		res.push(ln);
+	}
+	for(var i=1, L=res.length; i<L; i++) {
+		if(res[i][0] == 0) {
+			var sum = 0;
+			for(var j = i+1; j<L && res[j][0] > 0; j++ ) {
+				sum += res[j][4];
+				if(res[j][3] && res[j][4] == 0) { sum = 0; break; }
+			}
+			GrandTotal.push([res[i][1],sum]);
+			res[i][4] = sum; i=j-1;
+		}
+	}
+	GrandTotal.sort(function(a, b){return b[1]-a[1]});
+	GrandTotal.unshift([titlu,'Eval']);
+
+	var D = document.createElement('DIV'); var A = document.createElement('A');
+	A.href = 'javascript:toggleDetails(0)'; A.innerText = '✎ report details'; A.className = 'repDetails';
+	D.appendChild(intoTable(GrandTotal, indx));
+	D.appendChild(A); A = intoTable(res, indx); A.style.display = 'none'; A.id = 'reportDetails';
+	D.appendChild(A);
+	var r = id('out'); if(r.hasChildNodes()) r.removeChild( r.firstChild ); r.appendChild(D);
+	id('tableName').innerText = mTitlu;
+
+} catch(e) { alert(e.message); }
+
+}
+
+function getFrom( arr, key) {
+	for(var i=1, L=arr.length; i<L; i++) if(arr[i][0] == key) return arr[i][1];
+	alert('Not found!'); return '- Unknow - ';
+}
+
+function toggleDetails(w) { if(w && w!=curTable) return; var x = id('reportDetails').style; x.display = (x.display == 'none')?'block':'none'; }
+
+function intoTable(s, idx) {
+	var t = document.createElement('TABLE'), h = document.createElement('THEAD'), b = document.createElement('TBODY'); t.className = 'TblAlt';
+
+		var r = document.createElement('TR');
+		for(var i=0, C=s[0], L=C.length; i<L; i++) { var c = document.createElement('TH'); c.innerText = C[i]; r.appendChild(c); }
+		h.appendChild(r); t.appendChild(h);
+
+	for(var i=1, L=s.length; i<L; i++) {
+		var r = document.createElement('TR'); if(s[i][0]==0) { r.style.backgroundColor = '#bbbbee'; s[i][0] = '⚑';  s[i][2]=s[i][3]=''; }
+			
+		for(var y=0, C=s[i], LL=C.length; y<LL; y++) {
+			var v = (C[y] === true)?'✔':(C[y] === false?' ':C[y]);
+			var c = document.createElement('TD'); c.innerText = v;
+			if(y==LL-1) { c.style.textAlign = 'right'; if(idx==2) c.innerText = v.toFixed(1); }
+			r.appendChild(c);
+		}
+		b.appendChild(r);
+	}
+	t.appendChild(b);
+	return t;
+}
+
+
+</script>
+
+</head>
+<body onLoad='trageTot(); layOut()'>
+
+<TABLE cellPadding='2' cellSpacing='0' border='0' class='ConfigPanel'><TR>
+<TD><img src='res/search.png'> SEAD icon</TD>
+<TD><INPUT type='button' class='inpTab' onClick='orgPanel()' value='Ancheta Org.'></TD>
+<TD><INPUT type='button' class='inpTab' onClick='spePanel()' value='Ancheta Spec.'></TD>
+<TD><INPUT type='button' class='inpTab' onClick='toLeftPanel()' value='Show entities'></TD>
+<TD><INPUT type='button' class='inpTab' onClick='' value='Users'></TD>
+
+</TR></TABLE>
+
+<DIV id='tableName' style='position:absolute; font:bold 18pt Calibri,Arial; color:#555599; padding:2px;'></DIV>
+<div id='out' style='position:absolute; border:1px solid #bbbbee;border-radius:4px;padding:8px;overflow-y:auto;width:0px'></div>
+<div id='leftPanel' style='position:absolute; padding:8px;overflow-y:auto;'></div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-var https  = require('https'),
+var http  = require('http'),
     fs    = require('fs'),
     Mng   = require('mongodb'),
     MngIp = 'mongodb://127.0.0.1:27017/test',
@@ -13,11 +13,11 @@ MngIp = 'mongodb://'+process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
 var ipaddress = process.env.OPENSHIFT_NODEJS_IP;
 var port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
-https.createServer(function (req, res) {
+http.createServer(function (req, res) {
 
   if(req.method == 'GET') {
     
-    if(req.url == '/') returnFile('./index.html', res);
+    if(req.url.charAt(0) == '/') returnFile('.'+req.url,res); //index.html', res);
     else {
         try {
             var x = JSON.parse(decodeURI(req.url.substr(1)));
