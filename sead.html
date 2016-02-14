@@ -3,15 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <title>S.E.A.D.</title>
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Oswald|Ubuntu">
+<!-- <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Oswald|Ubuntu"> -->
 <link rel="shortcut icon" type="image/x-icon" href="res/favicon.ico" />
 <style type="text/css">
 body { background-image: url("res/iceberg.jpg"); background-repeat:no-repeat; }
-.TblAlt { font:normal 11pt Ubuntu,Calibri,Arial; color:#448; border-collapse:collapse; }
+.TblAlt { font:normal 11pt Calibri,Arial; color:#448; border-collapse:collapse; cursor:default; }
 .TblAlt tr:nth-of-type(odd) { background-color: rgba(255,255,255,.5); }
 .TblAlt tr:nth-of-type(even) { background-color: rgba(220,220,240,.5); }
-.TblAlt tr td { border-bottom: 1 solid #ccccee; cursor:hand; padding: 2px; vertical-align:top; }
-.TblAlt tbody tr:hover { background-color: #66c; color: white; } /*#ffff66; }*/
+.TblAlt tr td { border-bottom: 1 solid #ccccee; padding: 6px 2px 2px 2px; vertical-align:top; }
+.TblAlt tbody tr:hover { background-color: #88c; color: white; } /*#ffff66; }*/
 .TblAlt tr th {
 	background-color: rgba(40,40,120,.5); color:white; white-space: nowrap;
 	padding:6px 4px 6px 4px; font:bold 11pt Calibri,Arial;
@@ -30,19 +30,19 @@ body { background-image: url("res/iceberg.jpg"); background-repeat:no-repeat; }
 .repDetails { text-decoration: none; font: italic 10pt Arial; color: blue; }
 .repDetails:hover { text-decoration: underline; }
 
-.PanTbl { font:normal 11pt Calibri,Arial; color:#448; }
-.PanTbl tr td { border-bottom: 1px solid #bbbbee; cursor:hand; padding: 4px; }
-.PanTbl tr td:hover { background-color: white; cursor:hand; }
+.PanTbl { font:normal 11pt Calibri,Arial; color:#448; cursor: default; }
+.PanTbl tr td { border-bottom: 1px solid #bbbbee; padding: 4px; }
+.PanTbl tr td:hover { background-color: white; }
 
 .ConfigPanel { position:absolute; left:180px; top:18px; }
 .checkOn {
-	background-color:#ffffff; cursor:hand; outline: none;
+	background-color:#ffffff; outline: none; margin:0px;
 	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
 	background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEFSURBVHjaYvz//z8DJYCJgULAAiKSt3kSqx7ZuYxzvbZDDCBWc7FDJgMTIxPD6983GRYc2QMyjJEFl+nommMsbRhufN3M8PLXFaiQAMILIAURZiYM4uy6DP///2WYdGTRfyRDwHKvvl9jeP7zIpKZqAYwnHu3EExLcRgxhBjrMKw5ewXsIhD7xbfLDM9+nINrvXVHG+5KuAG//nwB0w++HGL4/fcbQ4iRAZj//NsFhqffz8A1P3hgjuJFmAGMQIn/0jL7IYo+HwJjdPD0iSNG+CCnA0aQgj9/f2LF2DRjS0iML597YNgMFWMkNiWiGIJPM0ogYjHkP440gapwwDMTxQYABBgA7FR0649a9E0AAAAASUVORK5CYII=');
 	background-repeat:no-repeat; background-position:center center; min-width:20px; min-height:20px; border:1px solid #bbbbee;
 }
 .checkOff {
-	outline: none; cursor:hand; background-color:#ffffff; min-width:20px; min-height:20px; border:1px solid #bbbbee;
+	margin:0px; outline: none; background-color:#ffffff; min-width:20px; min-height:20px; border:1px solid #bbbbee;
 	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
 }
 .checkOff:hover { background-color:#ffff66; }
@@ -402,7 +402,7 @@ function about() {
 <TD><INPUT type='button' class='inpTab' onClick='about()' value='About'></TD>
 </TR></TABLE>
 
-<DIV id='tableName' style='position:absolute; font-family: Oswald,Calibri,Arial; font-size:24pt; font-weight:bold; color:#448; padding:2px;'></DIV>
+<DIV id='tableName' style='position:absolute; font-family: Calibri,Arial; font-size:24pt; font-weight:bold; color:#448; padding:2px;'></DIV>
 <div id='out' style='position:absolute; padding:8px;overflow-y:auto;width:0px'></div>
 <div id='leftPanel' style='border: 1px solid #bbf; border-radius:6px; position:absolute; background-color: rgba(255,255,255,.5); padding:8px;overflow-y:auto;'></div>
 </body>
