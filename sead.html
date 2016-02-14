@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <title>S.E.A.D.</title>
-<!-- <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel"> -->
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
 <link rel="shortcut icon" type="image/x-icon" href="res/favicon.ico" />
 <style type="text/css">
 body { background-image: url("res/iceberg.jpg"); background-repeat:no-repeat; }
-.TblAlt { font:normal 11pt Calibri,Arial; color:#448; table-layout: fixed; border-collapse:collapse; white-space: nowrap; }
+.TblAlt { font:normal 11pt Abel,Calibri,Arial; color:#448; table-layout: fixed; border-collapse:collapse; white-space: nowrap; }
 .TblAlt tr:nth-of-type(odd) { background-color: rgba(255,255,255,.5); }
 .TblAlt tr:nth-of-type(even) { background-color: rgba(220,220,240,.5); }
 .TblAlt tr td { border-bottom: 1 solid #ccccee; cursor:hand; padding: 2px; }
@@ -393,7 +394,7 @@ function about() {
 </script>
 
 </head>
-<body onLoad='trageTot(); layOut()'>
+<body onLoad='trageTot(); layOut()' onresize='layOut()'>
 
 <TABLE cellPadding='0' cellSpacing='8px' border='0' class='ConfigPanel'><TR>
 <TD><INPUT type='button' class='inpTab' onClick='orgPanel()' value='Ancheta Organice'></TD>
@@ -403,7 +404,7 @@ function about() {
 <TD><INPUT type='button' class='inpTab' onClick='about()' value='About'></TD>
 </TR></TABLE>
 
-<DIV id='tableName' style='position:absolute; font-family: Calibri,Arial; font-size:24pt; font-weight:bold; color:#448; padding:2px;'></DIV>
+<DIV id='tableName' style='position:absolute; font-family: Abel,Calibri,Arial; font-size:24pt; font-weight:bold; color:#448; padding:2px;'></DIV>
 <div id='out' style='position:absolute; padding:8px;overflow-y:auto;width:0px'></div>
 <div id='leftPanel' style='border: 1px solid #bbf; border-radius:6px; position:absolute; background-color: rgba(255,255,255,.5); padding:8px;overflow-y:auto;'></div>
 </body>
