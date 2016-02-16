@@ -45,7 +45,7 @@ body { background-image: url("res/iceberg.jpg"); background-repeat:no-repeat; }
 	margin:0px; outline: none; background-color:#ffffff; min-width:20px; min-height:20px; border:1px solid #bbbbee;
 	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
 }
-.checkOff:hover { background-color:#ffff66; }
+.checkOn:hover,.checkOff:hover { background-color:#ffff66; }
 .inpTab {
 	outline: none; width:160px;
 	padding:6px; font:bold 12pt Calibri,Arial; color:#448;
@@ -370,7 +370,7 @@ function intoTable(s, idx) {
 		for(var y=0, C=s[i], LL=C.length; y<LL; y++) {
 			var v = (C[y] === true)?'✔':(C[y] === false?' ':C[y]);
 			var c = document.createElement('TD'); c.innerText = v;
-			if(y==LL-1) { c.style.textAlign = 'right'; if(idx==2) c.innerText = v.toFixed(1); }
+			if(typeof(v)=='number') c.style.textAlign = 'right'; if(idx==2 && y==LL-1) c.innerText = v.toFixed(1);
 			r.appendChild(c);
 		}
 		b.appendChild(r);
