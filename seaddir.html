@@ -200,14 +200,17 @@ function toggleSet(){
 	x.display = x.display=='none'?'':'none';
 }
 function getData(x){ id('tableName').innerText = tables[curTable=x].name; craftTable(tables[x].data); }
+
 function trageTot() {
 	try {
-    	var http = new XMLHttpRequest();
-    	http.open('GET', 'res/tables.json', false);
-    	http.send('');
-    	tables = JSON.parse(http.responseText);
-    	orgPanel();
-    } catch(e) { alert('> ERROR: ' + e.message); return 'Error!'; }
+		var xh = new XMLHttpRequest();
+		xh.onreadystatechange = function(){
+			if(xh.readyState==4 && xh.status==200) { tables = JSON.parse(xh.responseText); orgPanel(); }
+			else {  alert("Problem retrieving JSON data: " + xh.readyState + '/'+ xh.status); }
+		};
+		xh.open("GET","res/tables.json", true);
+		xh.send();
+	} catch(e) { alert(e.message); }
 }
 
 function layOut() {
@@ -445,7 +448,7 @@ var Mng = {
 		id('tipSave').className = 'saveOn'; this.isDirty = true;
         }
     },
-    
+
     insRow: function(d) {
         var r = this.curElem.parentElement, t = r.parentElement.parentElement;
         var c, L = t.rows[0].cells.length, ix = r.rowIndex + d; if(ix==0) return;
