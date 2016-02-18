@@ -16,7 +16,7 @@ var port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 http.createServer(function (req, res) {
 
   if(req.method == 'GET') {
-    
+
     if(req.url.charAt(0) == '/') returnFile('.'+req.url,res); //index.html', res);
     else {
         try {

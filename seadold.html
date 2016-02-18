@@ -243,7 +243,14 @@ function getData(x, act){
 	craftTable(tables[x].data, act);
 }
 function trageTot() {
-	for(var i=0, L=tables.length; i<L; i++) getDrive(i);
+	try {
+    	var http = new XMLHttpRequest();
+    	http.open('GET', 'res/tables.json', false);
+    	http.send('');
+    	tables = JSON.parse(http.responseText);
+    } catch(e) { alert(e.message); return 'Error!'; }
+
+	//for(var i=0, L=tables.length; i<L; i++) getDrive(i);
 }
 
 function layOut() {
