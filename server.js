@@ -17,7 +17,7 @@ http.createServer(function (req, res) {
 
   if(req.method == 'GET') {
 
-    if(req.url.charAt(0) == '/') returnFile('.'+req.url,res);
+    if(req.url.charAt(0) == '/') returnFile('.'+req.url, res);
     else {
         try {
             var x = JSON.parse(decodeURI(req.url.substr(1)));
@@ -33,7 +33,18 @@ http.createServer(function (req, res) {
   
 }).listen(port, ipaddress);
 
-function returnFile(fl, resp){ var file = fs.createReadStream(fl); file.pipe(resp); }
+//function returnFile(fl, resp){ var file = fs.createReadStream(fl); file.pipe(resp); }
+
+function returnFile(fl, resp){
+	fs.readFile(fl, function (err,data) {
+	  if (err) {
+		  resp.writeHead(200, {'Content-Type': 'text/plain' });
+		  resp.end('Error retreiving the file ' + fl + '...'); return;
+	  }
+	  //resp.writeHead(200, {'Content-Type': 'text/html' });
+	  resp.end(data);
+  });
+}
 
 function saveFile( fl, bd, resp ){
 	fs.writeFile(fl, bd, function(err) {

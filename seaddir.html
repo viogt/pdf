@@ -148,7 +148,7 @@ function toggleSet(){
 }
 function getData(x){ id('tableName').innerText = tables[curTable=x].name; craftTable(tables[x].data); }
 
-function trageTot() {
+/*function trageTot() {
 	try {
 		var xh = new XMLHttpRequest();
 		xh.onreadystatechange = function(){
@@ -157,6 +157,15 @@ function trageTot() {
 		};
 		xh.open("GET","res/tables.json", true);
 		xh.send();
+	} catch(e) { alert(e.message); }
+}*/
+
+function trageTot() {
+	try {
+		var xh = new XMLHttpRequest();
+		xh.open("GET","res/tables.json", false);
+		xh.send();
+		tables = JSON.parse(xh.responseText); orgPanel();
 	} catch(e) { alert(e.message); }
 }
 
