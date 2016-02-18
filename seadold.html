@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <title>S.E.A.D.</title>
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+<!-- <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Oswald|Ubuntu"> -->
+<link rel="shortcut icon" type="image/x-icon" href="res/favicon.ico" />
 <style type="text/css">
-.TblAlt { font:normal 11pt Calibri,Arial; color:#555599; table-layout: fixed; border-collapse:collapse; white-space: nowrap; }
-.TblAlt tr:nth-of-type(odd) { background-color: #ffffff; }
-.TblAlt tr:nth-of-type(even) { background-color: #eeeeff; }
-.TblAlt tr td { border-bottom: 1 solid #ccccee; cursor:hand; padding: 2px; }
-.TblAlt tbody tr:hover { background-color: #ffff66; }
+body { background-image: url("res/iceberg.jpg"); background-repeat:no-repeat; }
+.TblAlt { font:normal 11pt Calibri,Arial; color:#448; border-collapse:collapse; cursor:default; }
+.TblAlt tr:nth-of-type(odd) { background-color: rgba(255,255,255,.5); }
+.TblAlt tr:nth-of-type(even) { background-color: rgba(220,220,240,.5); }
+.TblAlt tr td { padding: 6px 2px 2px 2px; vertical-align:top; }
+.TblAlt tbody tr:hover { background-color: #88c; color: white; } /*#ffff66; }*/
 .TblAlt tr th {
-	white-space: nowrap;
-	padding:4px; font:bold 1em Calibri,Arial;
-	border:1px solid #bbbbee;
-	background-image: -ms-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
-	background-image: -moz-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
-	background-image: -o-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
-	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #eeeef8), color-stop(1, #d0c0ff));
-	background-image: -webkit-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
-	background-image: linear-gradient(top,#eeeef8 0%, #d0c0ff 100%);
-	text-shadow: 0px 1px 0px #FFFFFF; filter: dropshadow(color=#FFFFFF, offx=0, offy=1);
+	background-color: rgba(40,40,120,.5); color:white; white-space: nowrap;
+	padding:6px 4px 6px 4px; font:bold 11pt Calibri,Arial;
 }
 .txtVertical {
     white-space: nowrap;
     width: 50px; 
     overflow: hidden;
     text-overflow: ellipsis;
-
 	/*-webkit-transform: rotate(270deg);
 	transform: rotate(270deg);
 	-ms-transform: rotate(270deg);
@@ -36,49 +30,46 @@
 .repDetails { text-decoration: none; font: italic 10pt Arial; color: blue; }
 .repDetails:hover { text-decoration: underline; }
 
-.PanTbl { font:normal 11pt Calibri,Arial; color:#555599; }
-.PanTbl tr td { border-bottom: 1px solid #bbbbee; cursor:hand; padding: 4px; }
-.PanTbl tr td:hover { background-color: #ffff66; cursor:hand; }
+.PanTbl { font:normal 11pt Calibri,Arial; color:#448; cursor: default; }
+.PanTbl tr td { border-bottom: 1px solid #bbbbee; padding: 4px; }
+.PanTbl tr td:hover { background-color: white; }
 
-.CellTrue {
-background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEFSURBVHjaYvz//z8DJYCJgULAAiKSt3kSqx7ZuYxzvbZDDCBWc7FDJgMTIxPD6983GRYc2QMyjJEFl+nommMsbRhufN3M8PLXFaiQAMILIAURZiYM4uy6DP///2WYdGTRfyRDwHKvvl9jeP7zIpKZqAYwnHu3EExLcRgxhBjrMKw5ewXsIhD7xbfLDM9+nINrvXVHG+5KuAG//nwB0w++HGL4/fcbQ4iRAZj//NsFhqffz8A1P3hgjuJFmAGMQIn/0jL7IYo+HwJjdPD0iSNG+CCnA0aQgj9/f2LF2DRjS0iML597YNgMFWMkNiWiGIJPM0ogYjHkP440gapwwDMTxQYABBgA7FR0649a9E0AAAAASUVORK5CYII=');
-background-repeat:no-repeat; background-position:center center; min-width:20px; }
-.CellFalse {
-background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAD2SURBVHjaxFM7DoMwDH2pOESHHgDPcB223gKpAxK34EAMMIe1FCQOgFQxuflARVBSVepQS5Ht2PHn2RHMjF/ohB8p2gSZpprtyxEHX8dGTeMG0A5UlsD5rCSGvF55F4SpqpSm1GmCzPO3LXJy1LXllwvodoMsCpNVy2hbYBjCLRiaZ8u7Dng+QXlu9b4H7ncvBmKbwoYBWR4kaXv3YmAMyoEpjv2PdWUHcP1j1ECqFpyj777YA6Yss9KyuEeDaW0cCsCUJMDjYUE8kr5TNuOzC+JiMI5uz2rmJvNWvidwcJXXx8IAuwb6uMqrY2iVgzbx99/4EmAAarFu0IJle5oAAAAASUVORK5CYII=');
-background-repeat:no-repeat; background-position:center center; min-width:20px; }
-.ConfigPanel {
-	background-color:#ddddf0; color:#444488; margin: 4px;
-	padding:10px; font:normal 11pt Calibri,Arial;border:1px solid #bbbbee;
-	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
-	/* background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAH0lEQVQImWM8c+YMAwwwMSABKMfY2BjBOXv2LAMDAwCPUQVs8zG7KQAAAABJRU5ErkJggg==');
-	text-shadow: 0px 1px 0px #FFFFFF; filter: dropshadow(color=#FFFFFF, offx=0, offy=1); */
-}
+.ConfigPanel { position:absolute; left:180px; top:18px; }
 .checkOn {
-	background-color:#ffffff; cursor:hand; outline: none;
+	background-color:#ffffff; outline: none; margin:0px;
 	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
 	background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEFSURBVHjaYvz//z8DJYCJgULAAiKSt3kSqx7ZuYxzvbZDDCBWc7FDJgMTIxPD6983GRYc2QMyjJEFl+nommMsbRhufN3M8PLXFaiQAMILIAURZiYM4uy6DP///2WYdGTRfyRDwHKvvl9jeP7zIpKZqAYwnHu3EExLcRgxhBjrMKw5ewXsIhD7xbfLDM9+nINrvXVHG+5KuAG//nwB0w++HGL4/fcbQ4iRAZj//NsFhqffz8A1P3hgjuJFmAGMQIn/0jL7IYo+HwJjdPD0iSNG+CCnA0aQgj9/f2LF2DRjS0iML597YNgMFWMkNiWiGIJPM0ogYjHkP440gapwwDMTxQYABBgA7FR0649a9E0AAAAASUVORK5CYII=');
 	background-repeat:no-repeat; background-position:center center; min-width:20px; min-height:20px; border:1px solid #bbbbee;
 }
 .checkOff {
-	outline: none; cursor:hand; background-color:#ffffff; min-width:20px; min-height:20px; border:1px solid #bbbbee;
+	margin:0px; outline: none; background-color:#ffffff; min-width:20px; min-height:20px; border:1px solid #bbbbee;
 	-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;
 }
-.checkOff:hover { background-color:#ffff66; }
+.checkOn:hover,.checkOff:hover { background-color:#ffff66; }
 .inpTab {
-	cursor: hand; outline: none; width:160px;
-	padding:4px; font:bold 12pt Calibri,Arial; color:#555599;
-	border:1px solid #bbbbee; border-radius:4px;
-	background-image: -ms-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
-	background-image: -moz-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
-	background-image: -o-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
-	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #eeeef8), color-stop(1, #d0c0ff));
-	background-image: -webkit-linear-gradient(top, #eeeef8 0%, #d0c0ff 100%);
-	background-image: linear-gradient(top,#eeeef8 0%, #d0c0ff 100%);
-	-moz-border-radius:4px; -webkit-border-radius:4px;
-	text-shadow: 0px 1px 0px #FFFFFF; filter: dropshadow(color=#FFFFFF, offx=0, offy=1);
+	outline: none; width:160px;
+	padding:6px; font:bold 12pt Calibri,Arial; color:#448;
+	border:1px solid #bbbbee; border-radius:6px;
+	background-color: rgba(255,255,255,.4);
 }
-.inpTab:hover { border-color:#88c; /*box-shadow: 0px 1px 6px #66a;*/ }
+.inpTab:hover { background-color: rgba(255,255,255,1); border-color:#88c; }
 
+.custom-menu {
+    display: none; z-index: 1000; position: absolute; overflow: hidden;
+    border: 1px solid gray; white-space: nowrap;
+    font: normal 11pt Calibri,Arial;
+    background: white; color: #448;
+    border-radius: 5px; padding: 8px;
+    box-shadow: 0px 2px 12px gray;
+}
+.custom-menu li { padding: 2px; cursor: pointer; list-style-type: none; }
+.custom-menu li:hover { color: white; background-color: #555599; }
+.TblEdit { font:normal 11pt Calibri,Arial; color:#448; border-collapse:collapse; }
+.TblEdit > tbody > tr:first-child > td { background-color: rgba(40,40,120,.5); color:white; white-space: nowrap; padding:6px 4px 6px 4px; font:bold 11pt Calibri,Arial; }
+.TblEdit tr td { margin:0px; border-bottom: 1px solid #cce; padding: 6px 6px 2px 6px; vertical-align:top; }
+.TtlEdit { font:bold 18pt Calibri,Arial; color:#448; padding:6px; margin-bottom: 8px; border:1px solid #fff; border-radius: 6px;background-color: rgba(255,255,255,.5); }
+
+.saveOn { display: block; color: red; } .saveOff { display: none; }
 </style>
 
 <script type="text/javascript">
@@ -134,18 +125,8 @@ var curTable=0, tables = [
     	gid: 1082497651,
     	data: null,
     	sub: true
-    },
-    {
-    	name: "Siptoame specifice", // 8
-    	gid: 198847004,
-    	data: null,
-    	sub: false
     }
-
 ];
-
-var scrW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-var scrH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 var pathTo = "1yLqajaJ1U0QO_olHvNUjnVYP2cw8bechouCKWCobd8Q";
 
@@ -266,26 +247,29 @@ function trageTot() {
 }
 
 function layOut() {
-	var s = id('tableName').style; s.top = '70px'; s.left = '190px';
+	var scrW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	var scrH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+	var s = id('tableName').style; s.top = '64px'; s.left = '190px';
 	var dlt = 26;
 	s = id('out').style; s.top = '100px'; s.left = '180px'; s.width = (scrW - 180 - dlt) + 'px'; s.height = (scrH - 100 - dlt) + 'px';
-	s = id('leftPanel').style; s.top = '100px'; s.left = '9px'; s.width = '150px';
+	s = id('leftPanel').style; s.top = '105px'; s.left = '9px'; s.width = '150px';
 }
 
 function toLeftPanel() {
 	var b = '<TABLE class="PanTbl">';
 	for(var i=0, L=tables.length; i<L; i++) {
-		b += '<TR><TD onclick="getData(' + i + ',false)">' + tables[i].name + '</TD</TR>';
+		b += '<TR><TD onclick="Mng.makeTable(' + i + ')">✎ ' + tables[i].name + '</TD</TR>';
 	}
-	b += '<TR><TD onclick="sendToEdit()">*Edit entities</TD</TR>';
+	b += '<TR><TD id="tipSave" class="Send()" onclick="sendToEdit()">⚠ Save updates!/TD</TR>';
 	id('leftPanel').innerHTML = b + '</TABLE>';
 }
 
 function orgPanel() {
 	var b = '<TABLE class="PanTbl">';
-		b += '<TR><TD onclick="orgEvalSind(0)"><b>Evaluare Sindroame probabile</b></TD</TR>';
+		b += '<TR><TD onclick="orgEvalSind(0)"><b>✎ Evaluare Sindroame probabile</b></TD</TR>';
 		b += '<TR><TD onclick="toggleDetails(-1)">*Detalii evaluare Sindroame probabile</TD</TR>';
-		b += '<TR><TD onclick="orgEvalSind(1)"><b>Evaluare Tipuri probabile</b></TD</TR>';
+		b += '<TR><TD onclick="orgEvalSind(1)"><b>✎ Evaluare Tipuri probabile</b></TD</TR>';
 		b += '<TR><TD onclick="toggleDetails(-2)">*Detalii evaluare Tipuri probabile</TD</TR>';
 		b += '<TR><TD onclick="orgRand()">Random sample data</TD</TR>';
 		b += '<TR><TD onclick="resetOrg()">Reset initial data</TD</TR>';
@@ -295,7 +279,7 @@ function orgPanel() {
 
 function spePanel() {
 	var b = '<TABLE class="PanTbl">';
-		b += '<TR><TD onclick="orgEvalSind(2)"><b>Evaluare Tulburari probabile</b></TD</TR>';
+		b += '<TR><TD onclick="orgEvalSind(2)"><b>✎ Evaluare Tulburari probabile</b></TD</TR>';
 		b += '<TR><TD onclick="toggleDetails(-3)">*Detalii evaluare Tulburari probabile</TD</TR>';
 		b += '<TR><TD onclick="speRand()">Random sample data</TD</TR>';
 		b += '<TR><TD onclick="resetSpe()">Reset initial data</TD</TR>';
@@ -368,7 +352,7 @@ try {
 		}
 	}
 	GrandTotal.sort(function(a, b){return b[1]-a[1]});
-	GrandTotal.unshift([titlu,'Eval']);
+	GrandTotal.unshift([titlu,'Probabilitate']);
 
 	var D = document.createElement('DIV'); var A = document.createElement('A');
 	A.href = 'javascript:toggleDetails(0)'; A.innerText = '✎ report details'; A.className = 'repDetails';
@@ -402,7 +386,7 @@ function intoTable(s, idx) {
 		for(var y=0, C=s[i], LL=C.length; y<LL; y++) {
 			var v = (C[y] === true)?'✔':(C[y] === false?' ':C[y]);
 			var c = document.createElement('TD'); c.innerText = v;
-			if(y==LL-1) { c.style.textAlign = 'right'; if(idx==2) c.innerText = v.toFixed(1); }
+			if(typeof(v)=='number') c.style.textAlign = 'right'; if(idx==2 && y==LL-1) c.innerText = v.toFixed(1);
 			r.appendChild(c);
 		}
 		b.appendChild(r);
@@ -411,23 +395,175 @@ function intoTable(s, idx) {
 	return t;
 }
 
+function about() {
+	var d = '<DIV style="font:normal 11pt Calibri,Arial; color:#448;padding:4px;">Aceasta aplicatie se bazeaza pe:<br><br><br>DSM–IV TR diagnostic criteria,<BR>American Psychiatric Association<br><br>';
+	d += 'Schema simplificata a aplicatiei:<br><br>';
+	d += '<img style="margin-left:24px;" src="res/sead.png" /><br><br>';
+	d += 'Autor:<BR>Diana Topa, membru al Asociatiei Criminaliste...';
+	curTable = -4;
+	id('out').innerHTML = d;
+	id('tableName').innerText = 'Despre aceasta aplicatie';
+}
+
+function Send() {
+    try {
+      var msg = JSON.stringify( tables );
+      var http = new XMLHttpRequest();
+      http.open('POST', 'mng', false);
+      http.send(msg);
+      if(http.responseText == 'OK') id('tipSave').className = 'saveOff'; else { alert(http.responseText); }
+    } catch(e) { alert(e.message); return 'Error!'; }
+}
+
+var Mng = {
+
+    cntxMenu: null, curElem: null, insText: '???', oldValue: null, table: null, tableNum:0, sub: 'rgba(120,120,210,.5)',
+    contextMenu: [
+        { text: '✔ Insert Row Before', exe: function() { Mng.insRow(0); }},
+        { text: '✔ Insert Row After', exe: function() { Mng.insRow(1); }},
+        { text: '✘ Delete Row', exe: function() { Mng.delRow(); }},
+        { text: '✔ Insert Col Left', exe: function() { Mng.insCol(0); }},
+        { text: '✔ Insert Col Right', exe: function() { Mng.insCol(1); }},
+        { text: '✘ Delete Column', exe: function() { Mng.delCol(); }},
+        { text: 'Cancel', exe: null}],
+
+    rClick: function( e ) {
+        e.preventDefault(); if(e.target.tagName != 'TD') return;
+        if(this.cntxMenu && this.cntxMenu.style.display != 'none') this.callOff();
+        (this.curElem=e.target).style.backgroundColor = 'yellow';
+        if(this.cntxMenu == null) this.createCntx();
+        var m = this.cntxMenu.style; m.display = 'block'; var pos = this.getPos(this.curElem,this.cntxMenu);
+        m.top = pos.y + 'px'; m.left = pos.x + 'px';
+        document.addEventListener('click', this.callOff);
+        return false;
+    },
+    
+    callOff: function() {
+        Mng.cntxMenu.style.display = 'none';
+        document.removeEventListener("click");
+        Mng.curElem.style.backgroundColor = '';
+    },
+    
+    getPos: function( ob, cx ) {
+        var dLeft = 30, pad = 15, crd = ob.getBoundingClientRect(), dH = cx.offsetHeight + pad, dW = cx.offsetWidth + pad, top = crd.bottom - pad, left = crd.left + dLeft;
+        var scrW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	    var scrH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	    
+	    if(top + dH > scrH) top = crd.top - dH;
+	    if(left + dW > scrW) left = scrW - dW;
+	    return { "y": top, "x": left };
+    },
+
+    createCntx: function() {
+        var u = document.createElement('ul');
+        u.className = 'custom-menu';
+        for (var i=0, C=this.contextMenu, L=C.length; i<L; i++) {
+          var li = document.createElement('li');
+          u.appendChild(li);
+          li.innerHTML = C[i].text;
+          li.addEventListener('click', C[i].exe);
+        }
+        document.body.appendChild(u);
+        this.cntxMenu = u;
+    },
+    
+    focus: function(ob) { this.oldValue = ob.innerText; },
+    blur: function(ob) { if(ob.innerText != this.oldValue) {
+        var v = ob.textContent.trim();
+        ob.style.textAlign = isNum(v)?'right':'left'; ob.innerText = v;
+        if(ob.cellIndex == 0) {
+            var s = ob.parentElement.style;
+            if(ob.innerText == 0 && s.backgroundColor != this.sub) s.backgroundColor = this.sub;
+            else if(ob.innerText != 0 && s.backgroundColor) s.backgroundColor = null;
+        }
+        tables[this.tableNum].data[ob.parentElement.rowIndex][ob.cellIndex] = isNum(v)?(v*1):(v=='y'?true:(v=='n'?false:v));
+		id('tipSave').className = 'saveOn';
+        }
+    },
+    
+    insRow: function(d) {
+        var r = this.curElem.parentElement, t = r.parentElement.parentElement;
+        var c, L = t.rows[0].cells.length, ix = r.rowIndex + d; if(ix==0) return;
+        r = t.insertRow( ix );
+        for(var i=0; i<L; i++) { c = r.insertCell(-1); c.innerText = this.insText; c.contentEditable = true;
+        c.onfocus = function() { Mng.focus(this); }; c.onblur = function() { Mng.blur(this); }; }
+        this.sync();
+    },
+    
+    delRow: function() {
+        var r = this.curElem.parentElement, t = r.parentElement.parentElement;
+        if(r.rowIndex==0) return; t.deleteRow(r.rowIndex);
+        this.sync();
+    },
+    
+    insCol: function(d) {
+        var c, cIx = this.curElem.cellIndex+d, rs =  this.curElem.parentElement.parentElement.parentElement.rows, L = rs.length;
+        for(var i=0; i<L; i++) { c = rs[i].insertCell(cIx); c.innerText = this.insText; c.contentEditable = true;
+        c.onfocus = function() { Mng.focus(this); }; c.onblur = function() { Mng.blur(this); }; }
+        this.sync();
+    },
+    
+    delCol: function() {
+        var cIx = Mng.curElem.cellIndex, rs =  Mng.curElem.parentElement.parentElement.parentElement.rows, L = rs.length;
+        for(var i=0; i<L; i++) rs[i].deleteCell(cIx);
+        this.sync();
+    },
+    
+    makeTable: function(x) {
+        var A = tables[x].data; this.tableNum = x;
+        var t = document.createElement('TABLE'), b = document.createElement('TBODY'); t.className = 'TblEdit';
+        for(var i=0, L=A.length; i<L; i++) {
+            var r = document.createElement('TR');
+            for(var y=0, C=A[i], LL=C.length; y<LL; y++) {
+                var v = (C[y] === true)?'y':(C[y] === false?'n':C[y]);
+                var c = document.createElement('TD'); c.innerText = v; c.contentEditable = true;
+                c.onfocus = function() { Mng.focus(this); }; c.onblur = function() { Mng.blur(this); }; 
+                if(isNum(v)) c.style.textAlign = 'right';
+                r.appendChild(c);
+            }
+            if(r.cells[0].innerText == 0) r.style.backgroundColor = this.sub;
+            b.appendChild(r);
+        }
+        t.appendChild(b);
+        t.oncontextmenu = function(e) { Mng.rClick(e); };
+        var D = document.createElement('DIV'); D.contentEditable = true; D.className = 'TtlEdit'; D.innerText = tables[this.tableNum].name; D.onblur = function() { Mng.titleEdit(this); };
+        var Dret = document.createElement('DIV'); Dret.appendChild(D); Dret.appendChild(t);
+        D = id('out'); if(D.hasChildNodes()) D.removeChild( D.firstChild ); D.appendChild(Dret);
+        this.table = t; id('tableName').innerText = tables[this.tableNum].name;
+    },
+    
+    sync: function() {
+        var res = [], rs = this.table.rows, L = rs.length;
+        for(var i=0; i<L; i++) {
+            var u = [], r = rs[i], cls = r.cells, LL = cls.length, v;
+            for(var j=0; j<LL; j++) u.push( isNum(v = cls[j].innerText)?(v*1):(v=='y'?true:(v=='n'?false:v)) );
+            res.push(u);
+        }
+        tables[this.tableNum].data = res;
+        id('tipSave').className = 'saveOn';
+    },
+    
+    titleEdit: function(ob) { tables[this.tableNum].name = ob.textContent.trim(); },
+    
+    extractData: function() { alert( JSON.stringify(tables[this.tableNum]) ); }
+};
+function isNum(x) { return !isNaN(parseFloat(x)) && isFinite(x); }
 
 </script>
 
 </head>
-<body onLoad='trageTot(); layOut()'>
+<body onLoad='trageTot(); layOut()' onresize='layOut()'>
 
-<TABLE cellPadding='2' cellSpacing='0' border='0' class='ConfigPanel'><TR>
-<TD><img src='res/search.png'> SEAD icon</TD>
-<TD><INPUT type='button' class='inpTab' onClick='orgPanel()' value='Ancheta Org.'></TD>
-<TD><INPUT type='button' class='inpTab' onClick='spePanel()' value='Ancheta Spec.'></TD>
+<TABLE cellPadding='0' cellSpacing='8px' border='0' class='ConfigPanel'><TR>
+<TD><INPUT type='button' class='inpTab' onClick='orgPanel()' value='Ancheta Organice'></TD>
+<TD><INPUT type='button' class='inpTab' onClick='spePanel()' value='Ancheta Specifice'></TD>
 <TD><INPUT type='button' class='inpTab' onClick='toLeftPanel()' value='Show entities'></TD>
-<TD><INPUT type='button' class='inpTab' onClick='' value='Users'></TD>
-
+<TD><INPUT type='button' class='inpTab' onClick='' value='Utilizatori'></TD>
+<TD><INPUT type='button' class='inpTab' onClick='about()' value='About'></TD>
 </TR></TABLE>
 
-<DIV id='tableName' style='position:absolute; font:bold 18pt Calibri,Arial; color:#555599; padding:2px;'></DIV>
-<div id='out' style='position:absolute; border:1px solid #bbbbee;border-radius:4px;padding:8px;overflow-y:auto;width:0px'></div>
-<div id='leftPanel' style='position:absolute; padding:8px;overflow-y:auto;'></div>
+<DIV id='tableName' style='position:absolute; font-family: Calibri,Arial; font-size:24pt; font-weight:bold; color:#448; padding:2px;'></DIV>
+<div id='out' style='position:absolute; padding:8px;overflow-y:auto;width:0px'></div>
+<div id='leftPanel' style='border: 1px solid #bbf; border-radius:6px; position:absolute; background-color: rgba(255,255,255,.5); padding:8px;overflow-y:auto;'></div>
 </body>
 </html>

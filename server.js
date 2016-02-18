@@ -29,12 +29,7 @@ http.createServer(function (req, res) {
   }
     body = '';
     req.on('data', function (chunk) { body += chunk; });
-    req.on('end', function () {
-        try {
-            var J = JSON.parse(body);
-            res.end('POST RETURN: ' + x.action + ' --- ' + JSON.stringify(J));
-        } catch(e) { }
-    });
+    req.on('end', function () { saveFile('./res/tables/json',body, res); });
   
 }).listen(port, ipaddress);
 
@@ -44,4 +39,15 @@ function returnFile(fl, resp){
       resp.writeHead(200, {'Content-Type': 'text/html' });
       resp.end(data);
     });
+}
+
+function saveFile( fl, bd, resp ){
+	fs.writeFile(fl, bd, function(err) {
+	  if (err) {
+		  resp.writeHead(200, {'Content-Type': 'text/plain' });
+		  resp.end('Error writing the file.'); return;
+	  }
+	  resp.writeHead(200, {'Content-Type': 'text/plain' });
+	  resp.end('OK');
+  });
 }

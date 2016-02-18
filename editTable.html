@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <title>✎ Table Editor</title>
+<style type="text/css">
+
+.custom-menu {
+    display: none; z-index: 1000; position: absolute; overflow: hidden;
+    border: 1px solid gray; white-space: nowrap;
+    font: normal 11pt Calibri,Arial;
+    background: white; color: #448;
+    border-radius: 5px; padding: 8px;
+    box-shadow: 0px 2px 12px gray;
+}
+.custom-menu li { padding: 2px; cursor: pointer; list-style-type: none; }
+.custom-menu li:hover { color: white; background-color: #555599; }
+.TblEdit { font:normal 11pt Calibri,Arial; color:#448; border-collapse:collapse; }
+.TblEdit > tbody > tr:first-child > td { background-color: #669; color:#fff; font-weight:bold; padding: 6px 6px 2px 6px; }
+.TblEdit tr td { margin:0px; border-bottom: 1px solid #cce; padding: 6px 6px 2px 6px; vertical-align:top; }
+.TtlEdit { font:bold 18pt Calibri,Arial; color:#448; padding:6px; margin-bottom: 8px; border:1px solid #cce; border-radius: 6px; }
+
+</style>
+<script>
+
+    var tables = [
+        { name: 'Organic syndromes',
+        data: [
+        ['Code','Syndrome', 'Option'],
+        [200, 'Prima intrebare', false],
+        [201, 'Calificativul principal', true],
+        [202, 'Secondary opinion', false],
+        [200, 'Prima intrebare', false],
+        [201, 'Calificativul principal', true],
+        [202, 'Secondary opinion', false],
+        [200, 'Prima intrebare', false],
+        [201, 'Calificativul principal', true],
+        [202, 'Secondary opinion', false],
+        [200, 'Prima intrebare', false],
+        [201, 'Calificativul principal', true],
+        [202, 'Secondary opinion', false],
+        [200, 'Prima intrebare', false],
+        [201, 'Calificativul principal', true],
+        [202, 'Secondary opinion', false]
+        ]}
+    ];
+
+
+var Mng = {
+
+    cntxMenu: null, curElem: null, insText: '???', oldValue: null, table: null, tableNum:0, sub: '#aae',
+    contextMenu: [
+        { text: '✔ Insert Row Before', exe: function() { Mng.insRow(0); }},
+        { text: '✔ Insert Row After', exe: function() { Mng.insRow(1); }},
+        { text: '✘ Delete Row', exe: function() { Mng.delRow(); }},
+        { text: '✔ Insert Col Left', exe: function() { Mng.insCol(0); }},
+        { text: '✔ Insert Col Right', exe: function() { Mng.insCol(1); }},
+        { text: '✘ Delete Column', exe: function() { Mng.delCol(); }},
+        { text: 'Cancel', exe: null}],
+
+    rClick: function( e ) {
+        e.preventDefault(); if(e.target.tagName != 'TD') return;
+        if(this.cntxMenu && this.cntxMenu.style.display != 'none') this.callOff();
+        (this.curElem=e.target).style.backgroundColor = 'yellow';
+        if(this.cntxMenu == null) this.createCntx();
+        var m = this.cntxMenu.style; m.display = 'block'; var pos = this.getPos(this.curElem,this.cntxMenu);
+        m.top = pos.y + 'px'; m.left = pos.x + 'px';
+        document.addEventListener('click', this.callOff);
+        return false;
+    },
+    
+    callOff: function() {
+        Mng.cntxMenu.style.display = 'none';
+        document.removeEventListener("click");
+        Mng.curElem.style.backgroundColor = '';
+    },
+    
+    getPos: function( ob, cx ) {
+        var dLeft = 30, pad = 15, crd = ob.getBoundingClientRect(), dH = cx.offsetHeight + pad, dW = cx.offsetWidth + pad, top = crd.bottom - pad, left = crd.left + dLeft;
+        var scrW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	    var scrH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	    
+	    if(top + dH > scrH) top = crd.top - dH;
+	    if(left + dW > scrW) left = scrW - dW;
+	    return { "y": top, "x": left };
+    },
+
+    createCntx: function() {
+        var u = document.createElement('ul');
+        u.className = 'custom-menu';
+        for (var i=0, C=this.contextMenu, L=C.length; i<L; i++) {
+          var li = document.createElement('li');
+          u.appendChild(li);
+          li.innerHTML = C[i].text;
+          li.addEventListener('click', C[i].exe);
+        }
+        document.body.appendChild(u);
+        this.cntxMenu = u;
+    },
+    
+    focus: function(ob) { this.oldValue = ob.innerText; },
+    blur: function(ob) { if(ob.innerText != this.oldValue) {
+        var v = ob.textContent.trim();
+        ob.style.textAlign = isNum(v)?'right':'left'; ob.innerText = v;
+        if(ob.cellIndex == 0) {
+            var s = ob.parentElement.style;
+            if(ob.innerText == 0 && s.backgroundColor != this.sub) s.backgroundColor = this.sub;
+            else if(ob.innerText != 0 && s.backgroundColor) s.backgroundColor = null;
+        }
+        tables[this.tableNum].data[ob.parentElement.rowIndex][ob.cellIndex] = isNum(v)?(v*1):(v=='y'?true:(v=='n'?false:v));
+        }
+    },
+    
+    insRow: function(d) {
+        var r = this.curElem.parentElement, t = r.parentElement.parentElement;
+        var c, L = t.rows[0].cells.length, ix = r.rowIndex + d; if(ix==0) return;
+        r = t.insertRow( ix );
+        for(var i=0; i<L; i++) { c = r.insertCell(-1); c.innerText = this.insText; c.contentEditable = true;
+        c.onfocus = function() { Mng.focus(this); }; c.onblur = function() { Mng.blur(this); }; }
+        this.sync();
+    },
+    
+    delRow: function() {
+        var r = this.curElem.parentElement, t = r.parentElement.parentElement;
+        if(r.rowIndex==0) return; t.deleteRow(r.rowIndex);
+        this.sync();
+    },
+    
+    insCol: function(d) {
+        var c, cIx = this.curElem.cellIndex+d, rs =  this.curElem.parentElement.parentElement.parentElement.rows, L = rs.length;
+        for(var i=0; i<L; i++) { c = rs[i].insertCell(cIx); c.innerText = this.insText; c.contentEditable = true;
+        c.onfocus = function() { Mng.focus(this); }; c.onblur = function() { Mng.blur(this); }; }
+        this.sync();
+    },
+    
+    delCol: function() {
+        var cIx = Mng.curElem.cellIndex, rs =  Mng.curElem.parentElement.parentElement.parentElement.rows, L = rs.length;
+        for(var i=0; i<L; i++) rs[i].deleteCell(cIx);
+        this.sync();
+    },
+    
+    makeTable: function(x, trg) {
+        var A = tables[x].data; this.tableNum = x;
+        var t = document.createElement('TABLE'), b = document.createElement('TBODY'); t.className = 'TblEdit';
+        for(var i=0, L=A.length; i<L; i++) {
+            var r = document.createElement('TR');
+            for(var y=0, C=A[i], LL=C.length; y<LL; y++) {
+                var v = (C[y] === true)?'y':(C[y] === false?'n':C[y]);
+                var c = document.createElement('TD'); c.innerText = v; c.contentEditable = true;
+                c.onfocus = function() { Mng.focus(this); }; c.onblur = function() { Mng.blur(this); }; 
+                if(isNum(v)) c.style.textAlign = 'right';
+                r.appendChild(c);
+            }
+            b.appendChild(r);
+        }
+        t.appendChild(b);
+        t.oncontextmenu = function(e) { Mng.rClick(e); };
+        var D = document.createElement('DIV'); D.contentEditable = true; D.className = 'TtlEdit'; D.innerText = tables[this.tableNum].name; D.onblur = function() { Mng.titleEdit(this); };
+        var Dret = document.createElement('DIV'); Dret.appendChild(D); Dret.appendChild(t);
+        D = id('out'); if(D.hasChildNodes()) D.removeChild( D.firstChild ); D.appendChild(Dret);
+        this.table = t;
+    },
+    
+    sync: function() {
+        var res = [], rs = this.table.rows, L = rs.length;
+        for(var i=0; i<L; i++) {
+            var u = [], r = rs[i], cls = r.cells, LL = cls.length, v;
+            for(var j=0; j<LL; j++) u.push( isNum(v = cls[j].innerText)?(v*1):(v=='y'?true:(v=='n'?false:v)) );
+            res.push(u);
+        }
+        tables[this.tableNum].data = res;
+    },
+    
+    titleEdit: function(ob) { tables[this.tableNum].name = ob.textContent.trim(); },
+    
+    extractData: function() { alert( JSON.stringify(tables[this.tableNum]) ); }
+};
+function isNum(x) { return !isNaN(parseFloat(x)) && isFinite(x); }
+
+    function init() { Mng.makeTable(0, 'out'); }
+    
+function formatNumber(vl, dec){
+    var rs, dl, str = vl.toFixed(dec), sgn = false, sl;
+    if(str.charAt(0)=='-') { sgn=true; str = str.substr(1); }
+    str = str.split('.'); sl = str[0].length;
+    rs = (dl=sl%3)?str[0].substr(0,dl):''; if(dl && sl>3) rs += ',';
+    if(sl>2) rs += str[0].substr(dl).match(/.{1,3}/g).join(',');
+    if(sgn) rs = '-'+rs; if(str.length>1) rs += '.'+str[1];
+    return rs;
+}
+    
+    function id(x) { return document.getElementById(x); }
+    
+
+</script>
+    </head>
+<body onLoad='init()'>
+    <div id='out'></div>
+    <input type='button' onclick='Mng.extractData()' value='Show data'/>
+    <div id='scrie'></div>
+</body>
+</html>
