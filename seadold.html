@@ -261,7 +261,7 @@ function toLeftPanel() {
 	for(var i=0, L=tables.length; i<L; i++) {
 		b += '<TR><TD onclick="Mng.makeTable(' + i + ')">✎ ' + tables[i].name + '</TD</TR>';
 	}
-	b += '<TR><TD id="tipSave" class="Send()" onclick="sendToEdit()">⚠ Save updates!/TD</TR>';
+	b += '<TR><TD id="tipSave" class="saveOff" onclick="Send()">⚠ Save updates!</TD</TR>';
 	id('leftPanel').innerHTML = b + '</TABLE>';
 }
 
