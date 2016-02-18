@@ -361,8 +361,8 @@ function intoTable(s, idx) {
 
 function about() {
 	var d = '<DIV style="font:normal 11pt Calibri,Arial; color:#448;padding:4px;">Aceasta aplicatie se bazeaza pe:<br><br><br>DSM–IV TR diagnostic criteria,<BR>American Psychiatric Association<br><br>';
-	d += 'Schema simplificata a aplicatiei:<br><br>';
-	d += '<img style="margin-left:24px;" src="res/sead.png" /><br><br>';
+	d += 'Schema simplificata a aplicatiei:<br>';
+	d += '<img style="margin-left:24px;" src="res/sead.svg" /><br>';
 	d += 'Autor:<BR>Diana Topa, membru al Asociatiei Criminaliste...';
 	curTable = -4;
 	id('out').innerHTML = d;
@@ -491,7 +491,7 @@ var Mng = {
         t.appendChild(b);
         t.oncontextmenu = function(e) { Mng.rClick(e); };
         var D = document.createElement('DIV'); D.contentEditable = true; D.className = 'TtlEdit'; D.innerText = tables[this.tableNum].name;
-        D.onblur = function() { Mng.titleEdit(this, false); }; D.onblur = function() { Mng.titleEdit(this, true); };
+        D.onblur = function() { Mng.titleEdit(this, false); }; D.focus = function() { Mng.titleEdit(this, true); };
         var Dret = document.createElement('DIV'); Dret.appendChild(D); Dret.appendChild(t);
         D = id('out'); if(D.hasChildNodes()) D.removeChild( D.firstChild ); D.appendChild(Dret);
         this.table = t; id('tableName').innerText = tables[this.tableNum].name;

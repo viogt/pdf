@@ -35,14 +35,6 @@ http.createServer(function (req, res) {
 
 function returnFile(fl, resp){ var file = fs.createReadStream(fl); file.pipe(resp); }
 
-/* function returnFile(fl, resp){
-    fs.readFile(fl, function (err,data) {
-      //if (err) return shucher(resp, err);
-      resp.writeHead(200, {'Content-Type': 'text/html' });
-      resp.end(data);
-    });
-}*/
-
 function saveFile( fl, bd, resp ){
 	fs.writeFile(fl, bd, function(err) {
 	  if (err) {
