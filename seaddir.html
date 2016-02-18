@@ -205,7 +205,7 @@ function trageTot() {
 	try {
 		var xh = new XMLHttpRequest();
 		xh.onreadystatechange = function(){
-			if(xh.readyState==4 && xh.status==200) { tables = JSON.parse(xh.responseText); orgPanel(); }
+			if(xh.readyState==4) if(xh.status==200) { tables = JSON.parse(xh.responseText); orgPanel(); }
 			else {  alert("Problem retrieving JSON data: " + xh.readyState + '/'+ xh.status); }
 		};
 		xh.open("GET","res/tables.json", true);
