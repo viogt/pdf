@@ -225,7 +225,7 @@ function toLeftPanel() {
 	for(var i=0, L=tables.length; i<L; i++) {
 		b += '<TR><TD onclick="Mng.makeTable(' + i + ')">✎ ' + tables[i].name + '</TD</TR>';
 	}
-	b += '<TR><TD id="tipSave" class="saveOff" onClick="Save()">⚠ Save updates!</TD></TR>';
+	b += '<TR><TD id="tipSave" class="'+ (Mng.isDirty?'saveOn':'saveOff') +'" onClick="Save()">⚠ Save updates!</TD></TR>';
 	id('leftPanel').innerHTML = b + '</TABLE>';
 }
 
@@ -375,13 +375,14 @@ function Save() {
       var http = new XMLHttpRequest();
       http.open('POST', 'mng', false);
       http.send(msg);
-      if(http.responseText == 'OK') id('tipSave').className = 'saveOff'; else { alert(http.responseText); }
+      if(http.responseText == 'OK') { id('tipSave').className = 'saveOff'; Mng.isDirty = false; } else { alert(http.responseText); }
     } catch(e) { alert(e.message); return 'Error!'; }
 }
 
 var Mng = {
 
-    cntxMenu: null, curElem: null, insText: '???', oldValue: null, table: null, tableNum:0, sub: 'rgba(120,120,210,.5)',
+    cntxMenu: null, isDirty: false, curElem: null, insText: '???',
+    oldValue: null, table: null, tableNum:0, sub: 'rgba(120,120,210,.5)',
     contextMenu: [
         { text: '✔ Insert Row Before', exe: function() { Mng.insRow(0); }},
         { text: '✔ Insert Row After', exe: function() { Mng.insRow(1); }},
@@ -441,7 +442,7 @@ var Mng = {
             else if(ob.innerText != 0 && s.backgroundColor) s.backgroundColor = null;
         }
         tables[this.tableNum].data[ob.parentElement.rowIndex][ob.cellIndex] = isNum(v)?(v*1):(v=='y'?true:(v=='n'?false:v));
-		id('tipSave').className = 'saveOn';
+		id('tipSave').className = 'saveOn'; this.isDirty = true;
         }
     },
     
@@ -505,13 +506,14 @@ var Mng = {
             res.push(u);
         }
         tables[this.tableNum].data = res;
-        id('tipSave').className = 'saveOn';
+        id('tipSave').className = 'saveOn'; this.isDirty = true;
     },
     
     titleEdit: function(ob, fl) {
     	if(fl) { ob.setAttribute('oldValue',ob.innerText); return; }
     	if(ob.getAttribute('oldValue') == ob.innerText) return;
-    	tables[this.tableNum].name = ob.textContent.trim(); id('tipSave').className = 'saveOn';
+    	tables[this.tableNum].name = ob.textContent.trim();
+    	id('tipSave').className = 'saveOn'; this.isDirty = true;
     },
     
     extractData: function() { alert( JSON.stringify(tables[this.tableNum]) ); }
