@@ -261,7 +261,7 @@ function toLeftPanel() {
 	for(var i=0, L=tables.length; i<L; i++) {
 		b += '<TR><TD onclick="Mng.makeTable(' + i + ')">✎ ' + tables[i].name + '</TD</TR>';
 	}
-	b += '<TR><TD id="tipSave" class="saveOff" onclick="Send()">⚠ Save updates!</TD</TR>';
+	b += '<TR><TD id="tipSave" class="saveOff" onClick="Save()">⚠ Save updates!</TD></TR>';
 	id('leftPanel').innerHTML = b + '</TABLE>';
 }
 
@@ -412,6 +412,7 @@ function Send() {
       http.open('POST', 'mng', false);
       http.send(msg);
       if(http.responseText == 'OK') id('tipSave').className = 'saveOff'; else { alert(http.responseText); }
+      //return http.responseText;
     } catch(e) { alert(e.message); return 'Error!'; }
 }
 
@@ -543,7 +544,7 @@ var Mng = {
         id('tipSave').className = 'saveOn';
     },
     
-    titleEdit: function(ob) { tables[this.tableNum].name = ob.textContent.trim(); },
+    titleEdit: function(ob) { tables[this.tableNum].name = ob.textContent.trim(); id('tipSave').className = 'saveOn'; },
     
     extractData: function() { alert( JSON.stringify(tables[this.tableNum]) ); }
 };

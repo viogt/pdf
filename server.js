@@ -29,7 +29,7 @@ http.createServer(function (req, res) {
   }
     body = '';
     req.on('data', function (chunk) { body += chunk; });
-    req.on('end', function () { saveFile('./res/tables/json',body, res); });
+    req.on('end', function () { saveFile('./res/tables.json',body, res); });
   
 }).listen(port, ipaddress);
 

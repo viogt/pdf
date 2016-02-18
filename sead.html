@@ -243,9 +243,9 @@ function layOut() {
 function toLeftPanel() {
 	var b = '<TABLE class="PanTbl">';
 	for(var i=0, L=tables.length; i<L; i++) {
-		b += '<TR><TD onclick="getData(' + i + ',false)">✎ ' + tables[i].name + '</TD</TR>';
+		b += '<TR><TD onclick="getData(' + i + ',false)">✎ ' + tables[i].name + '</TD></TR>';
 	}
-	b += '<TR><TD onclick="sendToEdit()">⚠ Edit entities</TD</TR>';
+	b += '<TR><TD onclick="sendToEdit()">⚠ Edit entities</TD></TR>';
 	id('leftPanel').innerHTML = b + '</TABLE>';
 }
 
