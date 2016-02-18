@@ -130,39 +130,7 @@ var curTable=0, tables = [
 
 var pathTo = "1yLqajaJ1U0QO_olHvNUjnVYP2cw8bechouCKWCobd8Q";
 
-function getDrive( cfr ) {
-try {
-	var xh = new XMLHttpRequest();
-	xh.addr = cfr;
-		xh.onreadystatechange = function(){
-			if(xh.readyState==4)
-				if(xh.status==200) {
-					var cnt = xh.responseText;
-					var x = 'google.visualization.Query.setResponse(';
-					var st = cnt.indexOf(x) + x.length;
-					var s = JSON.parse( cnt.substr( st, cnt.length - st - 2) ).table;
-
-					var Rows = [], hd = [];
-					for(var i=0, C=s.cols, L=C.length; i<L; i++) hd.push( C[i].label );
-					Rows.push( hd );
-//alert(tables[xh.addr].name + '\n' + JSON.stringify(hd));
-					for(var i=0, R=s.rows, L=R.length; i<L; i++) {
-						var clls = [];
-						for(var j=0, C=R[i].c, LL=C.length; j<LL; j++) clls.push( C[j].v );
-						Rows.push( clls );
-					}
-					tables[xh.addr].data = Rows;
-					if(xh.addr == 0) orgPanel();
-					//{ id('tableName').innerText = tables[curTable=0].name; craftTable(Rows, true); }
-				}
-				else {  alert("Problem retrieving XML data (readyState/status): " + xh.readyState + '/'+ xh.status); }
-		};
-	xh.open("GET","https://spreadsheets.google.com/tq?tq=&key=" + pathTo + '&pub=1&gid=' + tables[cfr].gid, true);
-	xh.send();
-} catch(e) { alert(e.message); }
-}
-
-function craftTable(s, tblAcrive) {
+function craftTable(s) {
 	
 	var t = document.createElement('TABLE'), h = document.createElement('THEAD'), b = document.createElement('TBODY');
 		t.className = 'TblAlt';
@@ -171,7 +139,6 @@ function craftTable(s, tblAcrive) {
 		for(var i=0, C=s[0], L=C.length; i<L; i++) {
 			var c = document.createElement('TH'); c.innerText = C[i]; r.appendChild(c);
 		}
-		if(tblAcrive) {
 			if(curTable==0) { var c = document.createElement('TH'); c.innerText = 'Answer'; r.appendChild(c); }
 			else if(curTable==1) {
 			try {
@@ -182,7 +149,6 @@ function craftTable(s, tblAcrive) {
 				}
 			} catch(e) { alert(e.message); }
 			}
-		}
 		h.appendChild(r); t.appendChild(h);
 
 		for(var i=1, L=s.length; i<L; i++) {
@@ -194,8 +160,6 @@ function craftTable(s, tblAcrive) {
 				var v = (C[y] === true)?'✔':(C[y] === false?' ':C[y]);
 				var c = document.createElement('TD'); c.innerText = v; r.appendChild(c);
 			}
-			
-			if(tblAcrive) {
 				if(curTable==0) {
 					var u = document.createElement('INPUT'); u.type = 'button'; u.className = 'checkOff'; u.addEventListener("click", orgCheck);
 					var c = document.createElement('TD');  c.appendChild(u); r.appendChild(c);
@@ -207,7 +171,6 @@ function craftTable(s, tblAcrive) {
 					var c = document.createElement('TD');  c.appendChild(u); r.appendChild(c);
 					}
 				}
-			}
 			b.appendChild(r);
 		}
 		t.appendChild(b);
@@ -236,21 +199,15 @@ function toggleSet(){
 	var x = id('Setari').style;
 	x.display = x.display=='none'?'':'none';
 }
-function getData(x, act){
-	id('tableName').innerText = tables[curTable=x].name;
-	if(tables[x].data == null) { alert(tables[x].name + ' is NULL!'); getDrive(x); }
-	//alert(JSON.stringify(tables[x].data));
-	craftTable(tables[x].data, act);
-}
+function getData(x){ id('tableName').innerText = tables[curTable=x].name; craftTable(tables[x].data); }
 function trageTot() {
 	try {
     	var http = new XMLHttpRequest();
     	http.open('GET', 'res/tables.json', false);
     	http.send('');
     	tables = JSON.parse(http.responseText);
+    	orgPanel();
     } catch(e) { alert(e.message); return 'Error!'; }
-
-	//for(var i=0, L=tables.length; i<L; i++) getDrive(i);
 }
 
 function layOut() {
@@ -281,7 +238,7 @@ function orgPanel() {
 		b += '<TR><TD onclick="orgRand()">Random sample data</TD</TR>';
 		b += '<TR><TD onclick="resetOrg()">Reset initial data</TD</TR>';
 	id('leftPanel').innerHTML = b + '</TABLE>';
-	getData(0, true);
+	getData(0);
 }
 
 function spePanel() {
@@ -291,7 +248,7 @@ function spePanel() {
 		b += '<TR><TD onclick="speRand()">Random sample data</TD</TR>';
 		b += '<TR><TD onclick="resetSpe()">Reset initial data</TD</TR>';
 	id('leftPanel').innerHTML = b + '</TABLE>';
-	getData(1, true);
+	getData(1);
 }
 
 function resetOrg() {
@@ -559,7 +516,7 @@ function isNum(x) { return !isNaN(parseFloat(x)) && isFinite(x); }
 </script>
 
 </head>
-<body onLoad='trageTot(); layOut()' onresize='layOut()'>
+<body onLoad='layOut(); trageTot()' onresize='layOut()'>
 
 <TABLE cellPadding='0' cellSpacing='8px' border='0' class='ConfigPanel'><TR>
 <TD><INPUT type='button' class='inpTab' onClick='orgPanel()' value='Ancheta Organice'></TD>
