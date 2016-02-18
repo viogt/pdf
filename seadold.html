@@ -405,14 +405,13 @@ function about() {
 	id('tableName').innerText = 'Despre aceasta aplicatie';
 }
 
-function Send() {
+function Save() {
     try {
       var msg = JSON.stringify( tables );
       var http = new XMLHttpRequest();
       http.open('POST', 'mng', false);
       http.send(msg);
       if(http.responseText == 'OK') id('tipSave').className = 'saveOff'; else { alert(http.responseText); }
-      //return http.responseText;
     } catch(e) { alert(e.message); return 'Error!'; }
 }
 
