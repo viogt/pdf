@@ -207,7 +207,7 @@ function trageTot() {
     	http.send('');
     	tables = JSON.parse(http.responseText);
     	orgPanel();
-    } catch(e) { alert(e.message); return 'Error!'; }
+    } catch(e) { alert('> ERROR: ' + e.message); return 'Error!'; }
 }
 
 function layOut() {
