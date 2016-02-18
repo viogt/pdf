@@ -76,59 +76,7 @@ body { background-image: url("res/iceberg.jpg"); background-repeat:no-repeat; }
     
 function id(x) { return document.getElementById(x); }
 
-var curTable=0, tables = [
-	{
-    	name: "Ancheta organica", // 0
-    	gid: 52145521,
-    	data: null,
-    	sub: false
-    },
-    {
-    	name: "Ancheta specifica", // 1
-    	gid: 2017715786,
-    	data: null,
-    	sub: false
-    },
-    {
-    	name: "Factori ancheta specifica", // 2
-    	gid: 330986171,
-    	data: null,
-    	sub: false
-    },
-    {
-    	name: "Siptoame organice", // 3
-    	gid: 1405035266,
-    	data: null,
-    	sub: false
-    },
-    {
-    	name: "Siptoame specifice", // 4
-    	gid: 198847004,
-    	data: null,
-    	sub: false
-    },
-    
-    {
-    	name: "Sindroame organice", // 5
-    	gid: 757940284,
-    	data: null,
-    	sub: true
-    },
-    {
-    	name: "Tipuri de personalitati organice", // 6
-    	gid: 1310870941,
-    	data: null,
-    	sub: true
-    },
-    {
-    	name: "Tulburari specifice de personalitate", // 7
-    	gid: 1082497651,
-    	data: null,
-    	sub: true
-    }
-];
-
-var pathTo = "1yLqajaJ1U0QO_olHvNUjnVYP2cw8bechouCKWCobd8Q";
+var curTable=0, tables;
 
 function craftTable(s) {
 	
@@ -139,16 +87,15 @@ function craftTable(s) {
 		for(var i=0, C=s[0], L=C.length; i<L; i++) {
 			var c = document.createElement('TH'); c.innerText = C[i]; r.appendChild(c);
 		}
-			if(curTable==0) { var c = document.createElement('TH'); c.innerText = 'Answer'; r.appendChild(c); }
-			else if(curTable==1) {
-			try {
-				for(var j=1, LL=tables[2].data.length; j<LL; j++) {
-					var txtn = document.createElement('DIV'); txtn.innerText = tables[2].data[j][0]; txtn.className = 'txtVertical';
-					//if(vertAlCh.length<1) vertAl(); 
-					var c = document.createElement('TH'); c.appendChild(txtn); r.appendChild(c);
-				}
-			} catch(e) { alert(e.message); }
+		if(curTable==0) { var c = document.createElement('TH'); c.innerText = 'Answer'; r.appendChild(c); }
+		else if(curTable==1) {
+		try {
+			for(var j=1, LL=tables[2].data.length; j<LL; j++) {
+				var txtn = document.createElement('DIV'); txtn.innerText = tables[2].data[j][0]; txtn.className = 'txtVertical';
+				var c = document.createElement('TH'); c.appendChild(txtn); r.appendChild(c);
 			}
+		} catch(e) { alert(e.message); }
+		}
 		h.appendChild(r); t.appendChild(h);
 
 		for(var i=1, L=s.length; i<L; i++) {
