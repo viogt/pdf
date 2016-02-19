@@ -19,7 +19,7 @@ http.createServer(function (req, res) {
 
     if(req.url.charAt(0) == '/') {
         if(req.url.slice(-5)=='.json') {
-            var j = require("./res/tables.json");
+            var j = require('.'+req.url);
             res.writeHead(200, {'Content-Type': 'application/json;'});
             res.end( JSON.stringify(j) );
             return;
