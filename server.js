@@ -41,7 +41,7 @@ function returnFile(fl, resp){
 		  resp.writeHead(200, {'Content-Type': 'text/plain' });
 		  resp.end('Error retreiving the file ' + fl + '...'); return;
 	  }
-	  if(fl.slice(-5)=='json') resp.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
+	  if(fl.slice(-5)=='json') resp.writeHead(200, {'Content-Type': 'application/json; charset=ISO-8859-1'});
 	  resp.end(data);
   });
 }
