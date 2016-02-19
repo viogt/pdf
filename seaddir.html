@@ -166,7 +166,7 @@ function trageTot() {
 		xh.open("GET","res/tables.json", false);
 		xh.send();
 		tables = JSON.parse(xh.responseText); orgPanel();
-	} catch(e) { alert(e.message); }
+	} catch(e) { alert('Eroare: ' + e.message + '\n' + xh.responseText); }
 }
 
 function layOut() {
