@@ -17,7 +17,16 @@ http.createServer(function (req, res) {
 
   if(req.method == 'GET') {
 
-    if(req.url.charAt(0) == '/') returnFile('.'+req.url, res);
+    if(req.url.charAt(0) == '/') {
+        if(req.url.slice(-5)=='.json') {
+            var j = require("./res/tables.json");
+            res.writeHead(200, {'Content-Type': 'application/json;'});
+            res.end( JSON.stringify(j) );
+            return;
+        }
+        returnFile('.'+req.url, res);
+        return;
+    }
     else {
         try {
             var x = JSON.parse(decodeURI(req.url.substr(1)));
@@ -41,7 +50,7 @@ function returnFile(fl, resp){
 		  resp.writeHead(200, {'Content-Type': 'text/plain' });
 		  resp.end('Error retreiving the file ' + fl + '...'); return;
 	  }
-	  if(fl.slice(-5)=='json') resp.writeHead(200, {'Content-Type': 'application/json; charset=ISO-8859-1'});
+	  if(fl.slice(-5)=='json') resp.writeHead(200, {'Content-Type': 'application/json; charset='});
 	  resp.end(data);
   });
 }
@@ -55,4 +64,31 @@ function saveFile( fl, bd, resp ){
 	  resp.writeHead(200, {'Content-Type': 'text/plain' });
 	  resp.end('OK');
   });
+}
+
+function operate( js, resp ) {
+    resp.writeHead(200, {'Content-Type': 'text/plain' });
+    Mng.MongoClient.connect(MngIp, function(err, db) {
+        if(err) { resp.end('0 Database cannot be opened!'); return; }
+        
+        db.collection(js.collection, {strict:true}, function(err, collection) {
+        var cll = collection, collExists = err?false:true;
+        switch( js.action ) {
+            case 'get':
+                if(!collExists) { resp.end('null'); db.close(); return; }
+                cll.findOne({file: js.file}, function(err, obj) { sc(obj, err, resp, db); });
+		        return;
+            case 'save':
+                js.modified = new Date();
+                db.collection(js.collection).update({file: js.file}, js, {upsert: true}, function(err, obj) { sc(obj, err, resp, db); });
+		        return;
+		    default: resp.end('0 Unknown command'); db.close();
+        }
+        });
+    });
+}
+
+function sc(obj, err, res, DB) {
+    res.end(err?('0' + JSON.stringify(err)):JSON.stringify(obj));
+    DB.close();
 }
