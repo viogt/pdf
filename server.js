@@ -18,12 +18,12 @@ http.createServer(function (req, res) {
   if(req.method == 'GET') {
 
     if(req.url.charAt(0) == '/') {
-        if(req.url.slice(-5)=='.json') {
+        /*if(req.url.slice(-5)=='.json') {
             var j = require('.'+req.url);
             res.writeHead(200, {'Content-Type': 'application/json;'});
             res.end( JSON.stringify(j) );
             return;
-        }
+        }*/
         returnFile('.'+req.url, res);
         return;
     }
@@ -39,35 +39,36 @@ http.createServer(function (req, res) {
     body = '';
     req.on('data', function (chunk) { body += chunk; });
     req.on('end', function () { saveFile('./res/tables.json',body, res); });
-  
+
 }).listen(port, ipaddress);
 
 //function returnFile(fl, resp){ var file = fs.createReadStream(fl); file.pipe(resp); }
 
 function returnFile(fl, resp){
-	fs.readFile(fl, function (err,data) {
+	fs.readFile(fl, 'utf-8',  function (err,data) {
 	  if (err) {
 		  resp.writeHead(200, {'Content-Type': 'text/plain' });
-		  resp.end('Error retreiving the file ' + fl + '...'); return;
+		  resp.end('0Error retreiving the file ' + fl + '...'); return;
 	  }
-	  if(fl.slice(-5)=='json') resp.writeHead(200, {'Content-Type': 'application/json; charset='});
+	  if(fl.slice(-5)=='.json') resp.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
 	  resp.end(data);
   });
 }
 
 function saveFile( fl, bd, resp ){
-	fs.writeFile(fl, bd, function(err) {
+	fs.writeFile(fl, bd, 'utf-8', function(err) {
 	  if (err) {
 		  resp.writeHead(200, {'Content-Type': 'text/plain' });
-		  resp.end('Error writing the file.'); return;
+		  resp.end('0Error writing the file.'); return;
 	  }
 	  resp.writeHead(200, {'Content-Type': 'text/plain' });
 	  resp.end('OK');
   });
 }
 
-function operate( js, resp ) {
-    resp.writeHead(200, {'Content-Type': 'text/plain' });
+function operate( Rqst, resp ) {
+    var js = JSON.parse(Rqst);
+    //resp.writeHead(200, {'Content-Type': 'text/plain' });
     Mng.MongoClient.connect(MngIp, function(err, db) {
         if(err) { resp.end('0 Database cannot be opened!'); return; }
         
@@ -76,11 +77,11 @@ function operate( js, resp ) {
         switch( js.action ) {
             case 'get':
                 if(!collExists) { resp.end('null'); db.close(); return; }
-                cll.findOne({file: js.file}, function(err, obj) { sc(obj, err, resp, db); });
+                cll.findOne({_id: js._id}, function(err, obj) { sc(obj, err, resp, db); });
 		        return;
             case 'save':
                 js.modified = new Date();
-                db.collection(js.collection).update({file: js.file}, js, {upsert: true}, function(err, obj) { sc(obj, err, resp, db); });
+                db.collection(js.collection).update({_id: js._id}, js, {upsert: true}, function(err, obj) { sc(obj, err, resp, db); });
 		        return;
 		    default: resp.end('0 Unknown command'); db.close();
         }
