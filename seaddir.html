@@ -332,7 +332,7 @@ function about() {
 
 function Save() {
     try {
-    	tables.collection = 'files'; tables.action = 'save';
+    	tables.collection = 'files'; tables.action = 'save'; tables._id = 'tables';
       var msg = JSON.stringify( tables );
       var http = new XMLHttpRequest();
       http.open('POST', 'mng', false);
