@@ -44,7 +44,7 @@ function operate( Rqst, resp ) {
                 //cll.findOne({_id: js._id}, function(err, obj) { sc(obj, err, resp, db); });
 		        return;
             case 'save':
-                resp.end('0' + Rqst);
+                resp.end('0>>>' + Rqst);
                 //js.modified = new Date();
                 //db.collection(js.collection).update({_id: js._id}, js, {upsert: true}, function(err, obj) { sc(obj, err, resp, db); });
 		        return;
