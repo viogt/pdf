@@ -39,9 +39,8 @@ function operate( Rqst, resp ) {
         var cll = collection, collExists = err?false:true;
         switch( js.action ) {
             case 'get':
-                resp.end(Rqst);
-                //if(!collExists) { resp.end('null'); db.close(); return; }
-                //cll.findOne({_id: js._id}, function(err, obj) { sc(obj, err, resp, db); });
+                if(!collExists) { resp.end('null'); db.close(); return; }
+                cll.findOne({_id: js._id}, function(err, obj) { sc(obj, err, resp, db); });
 		        return;
             case 'save':
                 js.modified = new Date();
