@@ -324,7 +324,7 @@ function about() {
 	d += 'Schema simplificata a aplicatiei:<br>';
 	d += '<img style="margin-left:24px;" src="res/sead.svg" /><br>';
 	d += 'Autor:<BR>Diana Topa, membru al Asociatiei Criminaliste...<br>';
-	d += '<input type="checkbox" id="tglBkGr" onClick="toggleBckgr()"/> Plain and Clean';
+	d += '<table><tr><td id="tglBkGr" class="'+ (toggleBckgrVar?'checkOn':'checkOff') + '" onClick="toggleBckgr()"></td><td>Plain and Clean</td></tr></table>';
 	curTable = -4;
 	id('out').innerHTML = d;
 	id('tableName').innerText = 'Despre aceasta aplicatie';
@@ -332,6 +332,7 @@ function about() {
 
 function Save() {
     try {
+    	tables.collection = 'files'; tables.action = 'save';
       var msg = JSON.stringify( tables );
       var http = new XMLHttpRequest();
       http.open('POST', 'mng', false);
@@ -480,7 +481,11 @@ var Mng = {
     extractData: function() { alert( JSON.stringify(tables[this.tableNum]) ); }
 };
 function isNum(x) { return !isNaN(parseFloat(x)) && isFinite(x); }
-function toggleBckgr() { document.body.style.backgroundImage = id('tglBkGr').checked?null:'url("res/iceberg.jpg")'; }
+var toggleBckgrVar = false;
+function toggleBckgr() {
+	var b = id('tglBkGr'); toggleBckgrVar = !toggleBckgrVar; b.className = toggleBckgrVar?'checkOn':'checkOff';
+	document.body.style.backgroundImage = toggleBckgrVar?'none':"url('res/iceberg.jpg')";
+}
 
 </script>
 
