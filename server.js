@@ -18,13 +18,13 @@ http.createServer(function (req, res) {
   if(req.method == 'GET') {
 
     if(req.url.charAt(0) == '/') {
-        /*if(req.url.slice(-5)=='.json') {
-            var j = require('.'+req.url);
+        if(req.url.slice(-5)!='.json') returnStream('.'+req.url, res);
+        else returnFile('.'+req.url, res);
+            /*var j = require('.'+req.url);
             res.writeHead(200, {'Content-Type': 'application/json;'});
             res.end( JSON.stringify(j) );
             return;
         }*/
-        returnFile('.'+req.url, res);
         return;
     }
     else {
@@ -42,7 +42,7 @@ http.createServer(function (req, res) {
 
 }).listen(port, ipaddress);
 
-//function returnFile(fl, resp){ var file = fs.createReadStream(fl); file.pipe(resp); }
+function returnStream(fl, resp){ var file = fs.createReadStream(fl); file.pipe(resp); }
 
 function returnFile(fl, resp){
 	fs.readFile(fl, 'utf-8',  function (err,data) {
@@ -50,7 +50,7 @@ function returnFile(fl, resp){
 		  resp.writeHead(200, {'Content-Type': 'text/plain' });
 		  resp.end('0Error retreiving the file ' + fl + '...'); return;
 	  }
-	  if(fl.slice(-5)=='.json') resp.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
+	  resp.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
 	  resp.end(data);
   });
 }
