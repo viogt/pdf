@@ -333,8 +333,9 @@ function about() {
 
 function Save() {
     try {
-    	tables.collection = 'files'; tables.action = 'save'; tables._id = 'tables';
-      var msg = JSON.stringify( tables );
+    	var Xtables = {};
+    	Xtables.collection = 'files'; Xtables.action = 'save'; Xtables._id = 'tables';
+      var msg = JSON.stringify( Xtables );
       var http = new XMLHttpRequest();
       http.open('POST', 'mng', false);
       http.send(msg);
