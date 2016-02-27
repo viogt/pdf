@@ -19,7 +19,9 @@ http.createServer(function (req, res) {
 
     if(req.url.charAt(0) == '/') {
         if(req.url.slice(-5)!='.json') returnStream('.'+req.url, res);
-        else returnFile('.'+req.url, res);
+        else operate(JSON.stringify({ collection: 'files', action: 'get', _id: 'tables' }), res);
+
+            returnFile('.'+req.url, res);
             /*var j = require('.'+req.url);
             res.writeHead(200, {'Content-Type': 'application/json;'});
             res.end( JSON.stringify(j) );
