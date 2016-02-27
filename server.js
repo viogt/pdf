@@ -45,13 +45,13 @@ http.createServer(function (req, res) {
 function returnStream(fl, resp){ var file = fs.createReadStream(fl); file.pipe(resp); }
 
 function returnFile(fl, resp){
-	fs.readFile(fl, 'utf-8',  function (err,data) {
+	fs.readFile(fl, { "encoding":"utf-8", "flag":"r" },  function (err,data) {
 	  if (err) {
-		  resp.writeHead(200, {'Content-Type': 'text/plain' });
+		  resp.writeHead(200, { "Content-Type": "text/plain" });
 		  resp.end('0Error retreiving the file ' + fl + '...'); return;
 	  }
-	  resp.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
-	  resp.end(data);
+	  resp.writeHead(200, {"Content-Type": "application/json; charset=utf-8" });
+	  resp.end(data, 'utf-8');
   });
 }
 
