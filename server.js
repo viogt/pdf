@@ -48,7 +48,7 @@ function operate( Rqst, resp ) {
                 //js.modified = new Date();
                 //db.collection(js.collection).update({_id: js._id}, js, {upsert: true}, function(err, obj) { sc(obj, err, resp, db); });
 		        return;
-		    default: resp.end('0 Unknown command\n' + Rqst.slice(-200)); db.close();
+		    default: resp.end('0 Unknown command\n' + Rqst); db.close();
         }
         });
     });
