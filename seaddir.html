@@ -338,7 +338,7 @@ function Save() {
       var http = new XMLHttpRequest();
       http.open('POST', 'mng', false);
       http.send(msg);
-      if(http.responseText == 'OK') { id('tipSave').className = 'saveOff'; Mng.isDirty = false; } else { alert(http.responseText); }
+      if(http.responseText.charAt(0) != '0') { id('tipSave').className = 'saveOff'; Mng.isDirty = false; } else { alert(http.responseText); }
     } catch(e) { alert(e.message); return 'Error!'; }
 }
 
