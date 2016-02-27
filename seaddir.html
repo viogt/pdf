@@ -165,6 +165,7 @@ function trageTot() {
 		var xh = new XMLHttpRequest();
 		xh.open("GET","res/tables.json", false);
 		xh.send();
+		alert('SERVER:\n:::' + xh.response + ':::');
 		if(xh.responseText.charAt(0)=='0') { alert(xh.responseText.substr(1)); return; }
 		tables = JSON.parse(xh.responseText); orgPanel();
 	} catch(e) { alert('Eroare: ' + e.message + '\n:' + xh.responseText) + ":"; }
