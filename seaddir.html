@@ -165,7 +165,6 @@ function trageTot() {
 		var xh = new XMLHttpRequest();
 		xh.open("GET","res/tables.json", false);
 		xh.send();
-		alert('SERVER:\n:::' + xh.response.slice(-300) + ':::');
 		if(xh.responseText.charAt(0)=='0') { alert(xh.responseText.substr(1)); return; }
 		tables = JSON.parse(xh.responseText).file; orgPanel();
 	} catch(e) { alert('Eroare: ' + e.message + '\n:' + xh.responseText) + ":"; }
@@ -324,8 +323,9 @@ function about() {
 	var d = '<DIV style="font:normal 11pt Calibri,Arial; color:#448;padding:4px;">Aceasta aplicatie se bazeaza pe:<br><br><br>DSM–IV TR diagnostic criteria,<BR>American Psychiatric Association<br><br>';
 	d += 'Schema simplificata a aplicatiei:<br>';
 	d += '<img style="margin-left:24px;" src="res/sead.svg" /><br>';
-	d += 'Autor:<BR>Diana Topa, membru al Asociatiei Criminaliste...<br>';
-	d += '<table><tr><td id="tglBkGr" class="'+ (toggleBckgrVar?'checkOn':'checkOff') + '" onClick="toggleBckgr()"></td><td>Plain and Clean</td></tr></table>';
+	d += 'Autor:<BR>Diana Topa, membru al Asociatiei Criminaliste...<br><br>';
+//	d += '<table><tr><td id="tglBkGr" class="'+ (toggleBckgrVar?'checkOn':'checkOff') + '" onClick="toggleBckgr()"></td><td>Plain and Clean</td></tr></table>';
+	d += '<input id="tglBkGr" type="button" class="'+ (toggleBckgrVar?'checkOn':'checkOff') + '" onClick="toggleBckgr()" /> Plain and Clean';
 	curTable = -4;
 	id('out').innerHTML = d;
 	id('tableName').innerText = 'Despre aceasta aplicatie';
