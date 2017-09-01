@@ -24,7 +24,7 @@ http.createServer(function (req, res) {
     
     body = '';
     req.on('data', function (chunk) { body += chunk; });
-    req.on('end', function () { operate(body, res); /*saveFile('./res/tables.json',body, res);*/ });
+    req.on('end', function () { operate(body, res); });
 
 }).listen(port, ipaddress);
 
@@ -39,7 +39,6 @@ function operate( Rqst, resp ) {
         var cll = collection, collExists = err?false:true;
         switch( js.action ) {
             case 'get':
-                //resp.end( JSON.stringify(require("./res/tables2.json")) ); 
                 if(!collExists) { resp.end('null'); db.close(); return; }
                 cll.findOne({_id: js._id}, function(err, obj) { sc(obj, err, resp, db); });
 		        return;
